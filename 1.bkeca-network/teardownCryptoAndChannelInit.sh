@@ -1,0 +1,1 @@
+rm -rf crypto-config channel-artifacts/*.tx channel-artifacts/*.block

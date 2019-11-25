@@ -1,0 +1,60 @@
+{
+	"name": "first-network-udn",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"client": {
+		"tlsEnable": true,
+		"adminUser": "admin",
+		"adminPassword": "adminpw",
+		"enableAuthentication": false,
+		"organization": "Udn",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"dut-channel": {
+			"peers": {
+				"peer0.udn.bkeca.com": {}
+			},
+			"connection": {
+				"timeout": {
+					"peer": {
+						"endorser": "6000",
+						"eventHub": "6000",
+						"eventReg": "6000"
+					}
+				}
+			}
+		}
+	},
+	"organizations": {
+		"UdnMSP": {
+			"mspid": "UdnMSP",
+			"fullpath": true,
+			"adminPrivateKey": {
+				"path": "../1.bkeca-network/crypto-config/peerOrganizations/udn.bkeca.com/users/Admin@udn.bkeca.com/msp/keystore/17d835b7e3d9a6e73955ac5286a11604a71e3375c4c48fe6066ac964f701b8d5_sk"
+			},
+			"signedCert": {
+				"path": "../1.bkeca-network/crypto-config/peerOrganizations/udn.bkeca.com/users/Admin@udn.bkeca.com/msp/signcerts/Admin@udn.bkeca.com-cert.pem"
+			}
+		}
+	},
+	"peers": {
+		"peer0.udn.bkeca.com": {
+			"tlsCACerts": {
+				"path": "../1.bkeca-network/crypto-config/peerOrganizations/udn.bkeca.com/peers/peer0.udn.bkeca.com/tls/ca.crt"
+			},
+			"url": "grpcs://localhost:7051",
+			"eventUrl": "grpcs://localhost:7053",
+			"grpcOptions": {
+				"ssl-target-name-override": "peer0.udn.bkeca.com"
+			}
+		}
+	}
+}

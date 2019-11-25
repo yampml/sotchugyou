@@ -1,0 +1,60 @@
+{
+    "name": "first-network-udn",
+    "version": "1.0.0",
+    "client": {
+        "organization": "udn",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "udn": {
+            "mspid": "UdnMSP",
+            "peers": [
+                "peer0.udn.bkeca.com",
+                "peer1.udn.bkeca.com"
+            ],
+            "certificateAuthorities": [
+                "ca.udn.bkeca.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.udn.bkeca.com": {
+            "url": "grpcs://localhost:7051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICSzCCAfKgAwIBAgIRAJoq+tugjcDVsPP6J9r4NIQwCgYIKoZIzj0EAwIwcDEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFjAUBgNVBAoTDXVkbi5ia2VjYS5jb20xHDAaBgNVBAMTE3Rsc2Nh\nLnVkbi5ia2VjYS5jb20wHhcNMTkxMDIwMDYyMzAwWhcNMjkxMDE3MDYyMzAwWjBw\nMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2Fu\nIEZyYW5jaXNjbzEWMBQGA1UEChMNdWRuLmJrZWNhLmNvbTEcMBoGA1UEAxMTdGxz\nY2EudWRuLmJrZWNhLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABOmo9ngk\nRiAUIhGF1VqHbA5v0ml8p2O9FoeNRghXuBLYsXgLfO/nw9W4HFJkubL9w0R1MzKW\nTce06n6FDCiJyX2jbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEF\nBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQgLQgEvhf9\n+REQWs/B+ABow6/920MTSzxQLF2d0Cb2+EkwCgYIKoZIzj0EAwIDRwAwRAIgY+4n\nzVIqabqLQ2rENfEg3G1OqUAPTp5BMo+kqxmKTl4CIHFfaz53AaEBTZBLAfPdceMC\nux8V0a5nWMv/CpsUX47O\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.udn.bkeca.com",
+                "hostnameOverride": "peer0.udn.bkeca.com"
+            }
+        },
+        "peer1.udn.bkeca.com": {
+            "url": "grpcs://localhost:8051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICSzCCAfKgAwIBAgIRAJoq+tugjcDVsPP6J9r4NIQwCgYIKoZIzj0EAwIwcDEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFjAUBgNVBAoTDXVkbi5ia2VjYS5jb20xHDAaBgNVBAMTE3Rsc2Nh\nLnVkbi5ia2VjYS5jb20wHhcNMTkxMDIwMDYyMzAwWhcNMjkxMDE3MDYyMzAwWjBw\nMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2Fu\nIEZyYW5jaXNjbzEWMBQGA1UEChMNdWRuLmJrZWNhLmNvbTEcMBoGA1UEAxMTdGxz\nY2EudWRuLmJrZWNhLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABOmo9ngk\nRiAUIhGF1VqHbA5v0ml8p2O9FoeNRghXuBLYsXgLfO/nw9W4HFJkubL9w0R1MzKW\nTce06n6FDCiJyX2jbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEF\nBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQgLQgEvhf9\n+REQWs/B+ABow6/920MTSzxQLF2d0Cb2+EkwCgYIKoZIzj0EAwIDRwAwRAIgY+4n\nzVIqabqLQ2rENfEg3G1OqUAPTp5BMo+kqxmKTl4CIHFfaz53AaEBTZBLAfPdceMC\nux8V0a5nWMv/CpsUX47O\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.udn.bkeca.com",
+                "hostnameOverride": "peer1.udn.bkeca.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.udn.bkeca.com": {
+            "url": "https://localhost:7054",
+            "caName": "ca-udn",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICRjCCAeygAwIBAgIRAPlJq7g/fewpHyoLGfqEjUUwCgYIKoZIzj0EAwIwbTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFjAUBgNVBAoTDXVkbi5ia2VjYS5jb20xGTAXBgNVBAMTEGNhLnVk\nbi5ia2VjYS5jb20wHhcNMTkxMDIwMDYyMzAwWhcNMjkxMDE3MDYyMzAwWjBtMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEWMBQGA1UEChMNdWRuLmJrZWNhLmNvbTEZMBcGA1UEAxMQY2EudWRu\nLmJrZWNhLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABIchmyrBNJm7lmW7\nA504I3w3qwqXQ084mNiA4x5MT3WjMQPQDTN+kZ1oQW0NkLSS0Jn4DEmenJ7QkWRj\nSzCxjmajbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYI\nKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQg74C2qWfH7w6Z01He\ndaEz7lEEw8n0HaXrbhG0H7E7XNEwCgYIKoZIzj0EAwIDSAAwRQIhAKyJJOkzKlMz\n6vIxA2qQEYijoAX0Kd0gb2vsZYAVg2HUAiAGKzi/wypurFBJoUF7G5G7lLUMwqXy\nHUFsrfNKN6nuiw==\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

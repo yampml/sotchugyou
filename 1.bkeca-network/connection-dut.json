@@ -1,0 +1,60 @@
+{
+    "name": "first-network-DUT",
+    "version": "1.0.0",
+    "client": {
+        "organization": "DUT",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "DUT": {
+            "mspid": "DUTMSP",
+            "peers": [
+                "peer0.DUT.example.com",
+                "peer1.DUT.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.DUT.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.DUT.example.com": {
+            "url": "grpcs://localhost:9051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICSzCCAfKgAwIBAgIRAItXmwwQhPph2kd98IkpykQwCgYIKoZIzj0EAwIwcDEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFjAUBgNVBAoTDWR1dC5ia2VjYS5jb20xHDAaBgNVBAMTE3Rsc2Nh\nLmR1dC5ia2VjYS5jb20wHhcNMTkxMDIwMDYyMzAwWhcNMjkxMDE3MDYyMzAwWjBw\nMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2Fu\nIEZyYW5jaXNjbzEWMBQGA1UEChMNZHV0LmJrZWNhLmNvbTEcMBoGA1UEAxMTdGxz\nY2EuZHV0LmJrZWNhLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABIiItzb+\nQj4z/JHaoyaBBT/YQK/WfFfmzYRXs1F6nP7ANh3JTS6FBbnUh7L7pOhTPA2z7wcV\nyCSaoHketkBbMn6jbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEF\nBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQgYa4g69Io\napJds3/0pADmM/NOSSxupTQRbFXIoXbmFxswCgYIKoZIzj0EAwIDRwAwRAIgGlj6\ngwdWELMvJbJxcuclfEHNvPdhxRyDusySlCBjZd8CIGe7bukwyyXE/kX2oyhYUSLb\nLT2GysKhXw/gc3Rozz9H\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.DUT.example.com",
+                "hostnameOverride": "peer0.DUT.example.com"
+            }
+        },
+        "peer1.DUT.example.com": {
+            "url": "grpcs://localhost:10051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICSzCCAfKgAwIBAgIRAItXmwwQhPph2kd98IkpykQwCgYIKoZIzj0EAwIwcDEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFjAUBgNVBAoTDWR1dC5ia2VjYS5jb20xHDAaBgNVBAMTE3Rsc2Nh\nLmR1dC5ia2VjYS5jb20wHhcNMTkxMDIwMDYyMzAwWhcNMjkxMDE3MDYyMzAwWjBw\nMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2Fu\nIEZyYW5jaXNjbzEWMBQGA1UEChMNZHV0LmJrZWNhLmNvbTEcMBoGA1UEAxMTdGxz\nY2EuZHV0LmJrZWNhLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABIiItzb+\nQj4z/JHaoyaBBT/YQK/WfFfmzYRXs1F6nP7ANh3JTS6FBbnUh7L7pOhTPA2z7wcV\nyCSaoHketkBbMn6jbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEF\nBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQgYa4g69Io\napJds3/0pADmM/NOSSxupTQRbFXIoXbmFxswCgYIKoZIzj0EAwIDRwAwRAIgGlj6\ngwdWELMvJbJxcuclfEHNvPdhxRyDusySlCBjZd8CIGe7bukwyyXE/kX2oyhYUSLb\nLT2GysKhXw/gc3Rozz9H\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.DUT.example.com",
+                "hostnameOverride": "peer1.DUT.example.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.DUT.example.com": {
+            "url": "https://localhost:8054",
+            "caName": "ca-DUT",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICRDCCAeugAwIBAgIQGzZ3QDh7gNvdiWxX3wyqmjAKBggqhkjOPQQDAjBtMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEWMBQGA1UEChMNZHV0LmJrZWNhLmNvbTEZMBcGA1UEAxMQY2EuZHV0\nLmJrZWNhLmNvbTAeFw0xOTEwMjAwNjIzMDBaFw0yOTEwMTcwNjIzMDBaMG0xCzAJ\nBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJh\nbmNpc2NvMRYwFAYDVQQKEw1kdXQuYmtlY2EuY29tMRkwFwYDVQQDExBjYS5kdXQu\nYmtlY2EuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAErZVU7cWvr2Bj35R3\nyXG530jfxhI3XMop68kCvUsQGnAgjvkiWho18TzpiGWKSksX+WOwDykaDJaXcl4+\n0ylI/KNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggr\nBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCD6VUZl9L83JJ4/D5Zb\n7693BowFO6BhaJHOY5LDHsKFaTAKBggqhkjOPQQDAgNHADBEAiAzvPUiYkGwhoBl\nxwKVO9tf+fbMAX0u7kDcM0+WC80+UgIgMErCMPS3+aXMPDnFIiHUc0uBX98iw9dY\n0pu3iSArJE4=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

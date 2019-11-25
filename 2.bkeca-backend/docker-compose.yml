@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+  db:
+    image: mysql:8.0.18
+    environment:
+      MYSQL_DATABASE: 'bkeca_database'
+      # # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'nda'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'my-super-secret-pw'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'my-hyper-secret-pw'
+    ports:
+      - '3366:3306'
+    # network_mode: "host"
+    volumes:
+      - ./mysqlStorage/:/var/lib/mysql
+  webapi:
+    build:
+      context: .
+      dockerfile: webapi/Dockerfile
+    container_name: webapi
+    working_dir: /usr/src/app
+    command: yarn start
+    network_mode: "host"
+    volumes:
+      - ./webapi:/usr/src/app
+    ports:
+      - "6969:6969"
+    # depends_on: 
+    #   - db
