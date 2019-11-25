@@ -22,7 +22,7 @@ exports.signup = (req, res, next) => {
       return registerUser({ userEmail: email, hashedPw })
     })
     .then(result => {
-      console.log("result: ", result)
+      // console.log("result: ", result)
       let priv = Buffer.from(result.userIdentity.privateKey, 'utf-8');
       let cert = Buffer.from(result.userIdentity.certificate, 'utf-8');
       return User.create ({
@@ -33,13 +33,14 @@ exports.signup = (req, res, next) => {
       })
     })
     .then(result => {
-      console.log(result)
+      // console.log(result)
       res.status(201).json({ message: 'User created!', userId: result.id });
     })
     .catch(err => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
+      console.log("foobar error: ", err);
       next(err);
     });
 };
@@ -57,7 +58,7 @@ exports.login = (req, res, next) => {
         throw error;
       }
       loadedUser = user.dataValues;
-      console.log(user.dataValues)
+      // console.log(user.dataValues)
       return bcrypt.compare(password, user.dataValues.password);
     })
     .then(isEqual => {
@@ -74,7 +75,7 @@ exports.login = (req, res, next) => {
         'somesupersecretsecret',
         { expiresIn: '1h' }
       );
-      res.status(200).json({ token: token, verified: jwt.verify(token, 'somesupersecretsecret'), userId: loadedUser.id.toString() });
+      res.status(200).json({ token: token, expiresIn: new Date().getTime() + 60*60*1000, userId: loadedUser.id.toString() });
     })
     .catch(err => {
       if (!err.statusCode) {

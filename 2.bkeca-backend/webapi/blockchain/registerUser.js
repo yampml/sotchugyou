@@ -63,5 +63,6 @@ exports.registerUser = async (args) => {
         }
     } catch (error) {
         console.error(`Failed to register user ${args.userEmail}: ${error}`);
+        throw error;
     }
 }

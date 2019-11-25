@@ -15,7 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CancelIcon from '@material-ui/icons/Cancel';
-
+import { Redirect } from "react-router-dom";
 // import { useSnackbar } from 'notistack';
 // redux
 import { connect } from "react-redux";
@@ -88,10 +88,9 @@ export default connect(
 )(function SignInSide(props) {
   const classes = useStyles();
 
-  // const { enqueueSnackbar } = useSnackbar();
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("postman11@gmail.cozxcm");
+  const [password, setPassword] = React.useState("foobarpassword");
   const [isSignUp, setIsSignUp] = React.useState(true);
 
   const switchAuthModeHandler = () => {
@@ -110,25 +109,12 @@ export default connect(
       }
     })
 
-    // enqueueSnackbar(msg, { variant: isSignUp ? 'success' : 'info', autoHideDuration: 1000, });
   };
 
   const btnLoginSubmit = () => {
-    // if (isSignUp) {
-    //   auxios.put("/signup", { email, password })
-    //     .then(response => {
-    //       console.log("Auxios response: ", response);
-    //     })
-    //     .catch(err => {
-    //       console.log("Auxios error: ", err);
-    //     })
-    // } else {
-
-    // }
     props.onAuth(email, password, isSignUp);
   }
-  return (
-    <Grid container component="main" className={classes.root}>
+  return <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -212,5 +198,4 @@ export default connect(
         </div>
       </Grid>
     </Grid>
-  );
 });

@@ -19,11 +19,23 @@ import Search from "@material-ui/icons/Search";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/actionIndexes";
+
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks() {
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogout: () => dispatch(actions.logout()),
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(function AdminNavbarLinks(props) {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
@@ -207,7 +219,7 @@ export default function AdminNavbarLinks() {
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={props.onLogout}
                       className={classes.dropdownItem}
                     >
                       Logout
@@ -222,3 +234,4 @@ export default function AdminNavbarLinks() {
     </div>
   );
 }
+)

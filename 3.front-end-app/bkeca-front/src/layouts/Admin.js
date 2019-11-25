@@ -17,6 +17,10 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
 
+
+import { connect } from "react-redux";
+import * as actions from "../store/actions/actionIndexes";
+
 import { useTranslation } from "react-i18next";
 
 let ps;
@@ -60,7 +64,29 @@ const switchRoutes = props => (
 
 const useStyles = makeStyles(styles);
 
-export default function Admin({ ...rest }) {
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.error,
+    isAuthenticated: state.auth.token !== null,
+    authRedirectPath: state.auth.authRedirectPath,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogout: () => dispatch(actions.logout()),
+    onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/')),
+    enqueueSnackbar: (notification) => dispatch(actions.enqueueSnackbar(notification)),
+    closeSnackbar: (key) => dispatch(actions.closeSnackbar(key))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(function Admin({ ...props }) {
   //i18n
   const { t } = useTranslation();
   // styles
@@ -114,7 +140,7 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-  return (
+  return(
     <div className={classes.wrapper}>
       <Sidebar
         routes={dashboardRoutes}
@@ -124,21 +150,21 @@ export default function Admin({ ...rest }) {
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
-        {...rest}
+        {...props}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           routes={dashboardRoutes}
           handleDrawerToggle={handleDrawerToggle}
-          {...rest}
+          {...props}
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes({ ...rest })}</div>
+            <div className={classes.container}>{switchRoutes({ ...props })}</div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes({ ...rest })}</div>
+          <div className={classes.map}>{switchRoutes({ ...props })}</div>
         )}
         {getRoute() ? <Footer /> : null}
         <FixedPlugin
@@ -153,3 +179,4 @@ export default function Admin({ ...rest }) {
     </div>
   );
 }
+)
