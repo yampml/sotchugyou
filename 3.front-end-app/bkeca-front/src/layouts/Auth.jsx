@@ -14,13 +14,13 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CancelIcon from '@material-ui/icons/Cancel';
 
+// import { useSnackbar } from 'notistack';
 // redux
 import { connect } from "react-redux";
 import * as actions from "../store/actions/actionIndexes";
 
-// axios
-import { auth_instance as auxios } from "../apiCaller";
 
 const mapStateToProps = state => {
   return {
@@ -35,6 +35,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
     onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/')),
+    enqueueSnackbar: (notification) => dispatch(actions.enqueueSnackbar(notification)),
+    closeSnackbar: (key) => dispatch(actions.closeSnackbar(key))
   };
 };
 
@@ -86,14 +88,29 @@ export default connect(
 )(function SignInSide(props) {
   const classes = useStyles();
 
+  // const { enqueueSnackbar } = useSnackbar();
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isSignUp, setIsSignUp] = React.useState(true);
 
-
   const switchAuthModeHandler = () => {
     // rest.testReduxAuthStart();
     setIsSignUp(!isSignUp);
+    let msg = 'Switched to ' +  (isSignUp ? 'Sign Up' : 'Sign In') + ' mode!';
+    props.enqueueSnackbar({
+      message: msg,
+      options: {
+        key: new Date().getTime() + Math.random(),
+                variant: isSignUp ? 'success' : 'info',
+                autoHideDuration: 1000,
+                action: key => (
+                    <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+                ),
+      }
+    })
+
+    // enqueueSnackbar(msg, { variant: isSignUp ? 'success' : 'info', autoHideDuration: 1000, });
   };
 
   const btnLoginSubmit = () => {

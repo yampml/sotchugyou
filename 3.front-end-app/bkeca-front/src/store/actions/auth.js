@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
+import { auth_instance as auxios } from "../../apiCaller";
+import * as actions from "./actionIndexes";
 
 export const authStart = () => {
   return {
@@ -14,6 +15,12 @@ export const authSuccess = (token, userId) => {
     userId: userId
   };
 };
+
+export const registerSuccess = () => {
+  return {
+    type: actionTypes.REGISTER_SUCCESS,
+  }
+}
 
 export const authFail = error => {
   return {
@@ -44,15 +51,14 @@ export const auth = (email, password, isSignUp) => {
     dispatch(authStart());
     const authData = {
       email: email,
-      password: password,
-      returnSecureToken: true
+      password: password
     };
     let url =
       "http://localhost:6969/";
-    if (!isSignUp) {
-      url =
+    if (!isSignUp) { // sign in
+      url = 
         "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyD-nqQ-SE0MrKwuZ13obpCojigB98jod8I";
-      axios
+      auxios
         .post(url, authData)
         .then(response => {
           console.log(response);
@@ -70,31 +76,47 @@ export const auth = (email, password, isSignUp) => {
           dispatch(authFail(err.response.data.error));
         });
     } else {
-      axios
-        .post(url, authData)
+       //   auxios.put("/signup", { email, password })
+    //     .then(response => {
+    //       console.log("Auxios response: ", response);
+    //     })
+    //     .catch(err => {
+    //       console.log("Auxios error: ", err);
+    //     })
+      auxios // sign up
+        .put("/signup", authData)
         .then(response => {
-          console.log(response);
-          const expirationDate = new Date(
-            new Date().getTime() + response.data.expiresIn * 1000
-          );
-          localStorage.setItem("token", response.data.idToken);
-          localStorage.setItem("expirationDate", expirationDate);
-          localStorage.setItem("userId", response.data.localId);
-          axios
-            .put("https://react-my-burger-112af.firebaseio.com/users.json", {
-              id: response.data.localId,
-              role: "admin"
-            })
-            .then(response2 => {
-              console.log(response2.data);
-            })
-            .catch(error2 => {
-              console.log(error2);
-              console.log("not error not error");
-            });
+          console.log("Auxios response: ", response);
+          dispatch(registerSuccess());
+          dispatch(actions.enqueueSnackbar({
+              message: "Account registered successfully, please login!",
+              options: {
+                key: new Date().getTime() + Math.random(),
+                        variant: 'success',
+                        autoHideDuration: 1000,
+              }
+          }))
+          // const expirationDate = new Date(
+            // new Date().getTime() + response.data.expiresIn * 1000
+          // );
+          // localStorage.setItem("token", response.data.idToken);
+          // localStorage.setItem("expirationDate", expirationDate);
+          // localStorage.setItem("userId", response.data.localId);
+          // auxios
+          //   .put("https://react-my-burger-112af.firebaseio.com/users.json", {
+          //     id: response.data.localId,
+          //     role: "admin"
+          //   })
+          //   .then(response2 => {
+          //     console.log(response2.data);
+          //   })
+          //   .catch(error2 => {
+          //     console.log(error2);
+          //     console.log("not error not error");
+          //   });
 
-          dispatch(authSuccess(response.data.idToken, response.data.localId));
-          dispatch(checkAuthTimeout(response.data.expiresIn));
+          // dispatch(authSuccess(response.data.idToken, response.data.localId));
+          // dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(err => {
           console.log(err);

@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
-
+import { SnackbarProvider } from 'notistack';
 // core components
 import Admin from "layouts/Admin.js";
 import Auth from "layouts/Auth.jsx";
@@ -16,11 +16,14 @@ import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import authReducer from "./store/reducers/auth";
+import notificationsReducer from "./store/reducers/notifications"
+import Notifier from "components/Notifier/Notifier";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  notifications: notificationsReducer
 });
 
 const store = createStore(
@@ -35,11 +38,19 @@ ReactDOM.render(
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
         <Router history={hist}>
-          <Switch>
-            <Route path="/auth" component={Auth} />
-            <Route path="/admin" component={Admin} />
-            <Redirect from="/" to="/admin/dashboard" />
-          </Switch>
+          <SnackbarProvider 
+            maxSnack={3} 
+            anchorOrigin={{
+                  vertical: 'top', // top; bottom
+                  horizontal: 'right', // left; center; right
+              }}>
+            <Notifier />                
+            <Switch>
+              <Route path="/auth" component={Auth} />
+              <Route path="/admin" component={Admin} />
+              <Redirect from="/" to="/admin/dashboard" />
+            </Switch>
+          </SnackbarProvider>
         </Router>
       </Provider>
     </I18nextProvider>
