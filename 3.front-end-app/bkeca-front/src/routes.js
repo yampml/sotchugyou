@@ -45,34 +45,6 @@ export const dashboardRoutes = [
       { path: "/classrooms/:id/all", name: "<ClassroomName>", icon: Notifications, component: People, layout: "/admin", exact: true, hideSidebar: true },
       { path: "/classrooms/:id/gr", name: "<ClassroomName>", icon: Notifications, component: FullScreenDialog, layout: "/admin", exact: true, hideSidebar: true }
     ]
-  },
-  {
-    path: "/typography",
-    name: "Schedule",
-    icon: LibraryBooks,
-    component: Typography,
-    layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: BubbleChart,
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: LocationOn,
-    component: Maps,
-    layout: "/admin"
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin"
   }
 ];
 

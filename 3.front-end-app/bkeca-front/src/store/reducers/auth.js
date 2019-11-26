@@ -4,6 +4,7 @@ import { updateObject } from "../utility";
 const initialState = {
   token: null,
   userId: "",
+  currentUser: null, //id, email, created_at, private_key, cert_pem
   error: "",
   loading: false,
   authRedirectPath: "/"
@@ -50,6 +51,12 @@ const setAuthRedirectPath = (state, action) => {
   });
 };
 
+const setCurrentUser = (state, action) => {
+  return updateObject(state, {
+    currentUser: action.currentUser
+  })
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_START:
@@ -64,6 +71,8 @@ const reducer = (state = initialState, action) => {
       return authLogout(state, action);
     case actionTypes.SET_AUTH_REDIRECT_PATH:
       return setAuthRedirectPath(state, action);
+    case actionTypes.SET_CURRENT_USER:
+      return setCurrentUser(state, action);
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes";
-import { auth_instance as auxios } from "../../apiCaller";
+import { auth_instance as auxios, user_instance as userxios } from "../../apiCaller";
 import * as actions from "./actionIndexes";
 
 export const authStart = () => {
@@ -147,7 +147,31 @@ export const authCheckState = () => {
             expirationDate.getTime()
           )
         );
+        dispatch(fetchCurrentUser(userId, token));
       }
     }
   };
 };
+
+export const fetchCurrentUser = (userID, token) => {
+  return dispatch => {
+    const url = "/user/" + userID;
+    userxios
+      .get(url, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      .then( result => {
+        const { id, email, created_at, private_key, cert_pem }  = result.data.user;
+        dispatch(setCurrentUser( { id, email, created_at, private_key, cert_pem } ));
+      })
+  }
+}
+
+export const setCurrentUser = (user) => {
+  return {
+    type: actionTypes.SET_CURRENT_USER,
+    currentUser: { ...user}
+  }
+}

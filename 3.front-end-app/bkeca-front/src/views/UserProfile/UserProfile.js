@@ -24,6 +24,8 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import React from "react";
 
+import { connect } from "react-redux";
+
 const CssTextField = withStyles({
   root: {
     marginTop: "1rem",
@@ -88,11 +90,33 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+
+const mapDispatchToProps = dispatch => {
+  return {
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    currentUser: state.auth.currentUser,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(function UserProfile(props) {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+
+  const [email, setEmail] = React.useState(props.currentUser.email);
+
+  const bufferToString = buf => {
+    return Buffer.from(buf.data).toString()
+  }
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -109,8 +133,8 @@ export default function UserProfile() {
                   <img src={avatar} alt="..." />
                 </a>
               </CardAvatar>
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
+              <h4 className={classes.cardTitleWhite}>{props.currentUser.email}</h4>
+              <p className={classes.cardCategoryWhite}>{bufferToString(props.currentUser.private_key)}</p>
             </CardHeader>
             <CardBody>
               <GridContainer>
@@ -135,6 +159,7 @@ export default function UserProfile() {
                     fullWidth
                     label="Email address"
                     variant="outlined"
+                    value={props.currentUser.email}
                   />
                 </GridItem>
               </GridContainer>
@@ -194,3 +219,4 @@ export default function UserProfile() {
     </div>
   );
 }
+)
