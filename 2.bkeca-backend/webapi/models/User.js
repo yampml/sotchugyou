@@ -2,49 +2,70 @@
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('User', {
-    'id': {
+    'user_id': {
       type: DataTypes.INTEGER(11),
-      autoIncrement: true,
       allowNull: false,
       primaryKey: true,
-      comment: "null"
+      primaryKey: true,
+      comment: "null",
+      autoIncrement: true
     },
     'email': {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+      comment: "null"
+    },
+    'username': {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+      comment: "null"
+    },
+    'password_hash': {
       type: DataTypes.STRING(255),
       allowNull: true,
       comment: "null"
     },
-    'password': {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      comment: "null"
-    },
-    'created_at': {
+    'dob': {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       comment: "null"
     },
-    'updated_at': {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-      comment: "null"
-    },
-    'private_key': {
-      type: "BLOB",
-      allowNull: false,
-      comment: "null"
-    },
-    'cert_pem': {
+    'priv_key': {
       type: "BLOB",
       allowNull: true,
       comment: "null"
     },
-    'public_key': {
+    'cert': {
       type: "BLOB",
       allowNull: true,
       comment: "null"
+    },
+    'role_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      comment: "null",
+      references: {
+        model: 'Role',
+        key: 'role_id'
+      }
+    },
+    'student_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      comment: "null",
+      references: {
+        model: 'Student',
+        key: 'student_id'
+      }
+    },
+    'instructor_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      comment: "null",
+      references: {
+        model: 'Instructor',
+        key: 'instructor_id'
+      }
     }
   }, {
     tableName: 'User'

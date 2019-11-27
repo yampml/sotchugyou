@@ -12,6 +12,8 @@ const { User } = require('./models/modelsIndex');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 
+const seeds = require('./utils/seeds');
+
 const app = express();
 
 // const fileStorage = multer.diskStorage({
@@ -65,20 +67,19 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+
 sequelize
-  // .sync({ force: true })
-  .sync()
-  // .then(result => {
-  //   // console.log(result);
-  //   return User.findByPk(1);
-  // })
-  // .then(user => {
-  //   if (!user) {
-  //     return User.create({ email: 'test@test.com', password: 'foobar', private_key: 'priv' });
-  //   }
-  //   // console.log(user)
-  //   return user;
-  // })
+  .query('SET FOREIGN_KEY_CHECKS = 0')
+  .then(() => {
+    return sequelize.sync()
+    return sequelize.sync({ force: true }) 
+  })
+  .then(() => {
+    return seeds();
+  })
+  .then(() => {
+    return sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
+  })
   .then(_ => {
     app.listen(6969);
   })
@@ -88,3 +89,4 @@ sequelize
 
   //
 //sequelize-auto -h localhost -d bkecaDB -u root -x "my-hyper-secret-pw" -p 3366 -e mysql -o "./modelss"
+//sequelize-auto -h localhost -d mydb -u root -x "my-hyper-secret-pw" -p 3366 -e mysql -o "./modelss"

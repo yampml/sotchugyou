@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { Redirect } from "react-router-dom";
 // import { useSnackbar } from 'notistack';
 // redux
 import { connect } from "react-redux";

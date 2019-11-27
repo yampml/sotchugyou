@@ -21,31 +21,32 @@ import FullScreenDialog from "components/FullScreenDialog/FullScreenDialog.jsx";
 
 export const dashboardRoutes = [
   {
+    path: "/classrooms", name: "Classrooms", icon: "content_paste", component: Classrooms, layout: "/stu",
+    childLink: [
+      { path: "/classrooms/:id/", name: "<ClassroomName>", icon: Notifications, component: Classroom, layout: "/stu", exact: true, hideSidebar: true },
+      { path: "/classrooms/:id/ex", name: "<ClassroomName>", icon: Notifications, component: Exercises, layout: "/stu", exact: true, hideSidebar: true },
+      { path: "/classrooms/:id/all", name: "<ClassroomName>", icon: Notifications, component: People, layout: "/stu", exact: true, hideSidebar: true },
+      { path: "/classrooms/:id/gr", name: "<ClassroomName>", icon: Notifications, component: FullScreenDialog, layout: "/stu", exact: true, hideSidebar: true }
+    ]
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/admin"
+    layout: "/stu"
   },
   {
     path: "/user",
     name: "Profile",
     icon: Person,
     component: UserProfile,
-    layout: "/admin"
+    layout: "/stu"
   },
   {
     slash: true
   },
-  {
-    path: "/classrooms", name: "Classrooms", icon: "content_paste", component: Classrooms, layout: "/admin",
-    childLink: [
-      { path: "/classrooms/:id/", name: "<ClassroomName>", icon: Notifications, component: Classroom, layout: "/admin", exact: true, hideSidebar: true },
-      { path: "/classrooms/:id/ex", name: "<ClassroomName>", icon: Notifications, component: Exercises, layout: "/admin", exact: true, hideSidebar: true },
-      { path: "/classrooms/:id/all", name: "<ClassroomName>", icon: Notifications, component: People, layout: "/admin", exact: true, hideSidebar: true },
-      { path: "/classrooms/:id/gr", name: "<ClassroomName>", icon: Notifications, component: FullScreenDialog, layout: "/admin", exact: true, hideSidebar: true }
-    ]
-  }
+  
 ];
 
 export const classroomsRoutes = [

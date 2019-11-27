@@ -42,7 +42,7 @@ const switchRoutes = props => (
     })} */}
 
     {dashboardRoutes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/stu") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -58,7 +58,7 @@ const switchRoutes = props => (
       return null;
     })}
 
-    <Redirect from="/admin" to="/admin/dashboard" />
+    <Redirect from="/stu" to="/stu/dashboard" />
   </Switch>
 );
 
@@ -86,7 +86,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(function Admin({ ...props }) {
+)(function StudentPage({ ...props }) {
   //i18n
   const { t } = useTranslation();
   // styles

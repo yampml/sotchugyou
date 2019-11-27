@@ -1,0 +1,34 @@
+/* jshint indent: 2 */
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('StudentExam', {
+    'student_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      comment: "null",
+      references: {
+        model: 'Student',
+        key: 'student_id'
+      }
+    },
+    'exam_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      comment: "null",
+      references: {
+        model: 'Exam',
+        key: 'exam_id'
+      }
+    },
+    'student_exam_id': {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      primaryKey: true,
+      comment: "null",
+      autoIncrement: true
+    }
+  }, {
+    tableName: 'StudentExam'
+  });
+};

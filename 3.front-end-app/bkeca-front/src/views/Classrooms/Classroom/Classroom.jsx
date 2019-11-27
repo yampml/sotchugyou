@@ -291,7 +291,7 @@ export default function Classroom(props) {
           <GridItem xs={12} sm={12} md={8}>
             <NavLink
               exact
-              to={"/admin/classrooms/" + props.match.params.id}
+              to={"/stu/classrooms/" + props.match.params.id}
               activeClassName={classes.activelink}
             >
               <Button color="primary" className={[classes.title].join(" ")}>
@@ -300,7 +300,7 @@ export default function Classroom(props) {
             </NavLink>
             <NavLink
               exact
-              to={"/admin/classrooms/" + props.match.params.id + "/ex/"}
+              to={"/stu/classrooms/" + props.match.params.id + "/ex/"}
               activeClassName={classes.activelink}
             >
               <Button color="primary" className={classes.title}>
@@ -309,7 +309,7 @@ export default function Classroom(props) {
             </NavLink>
             <NavLink
               exact
-              to={"/admin/classrooms/" + props.match.params.id + "/all/"}
+              to={"/stu/classrooms/" + props.match.params.id + "/all/"}
               activeClassName={classes.activelink}
             >
               <Button color="primary" className={classes.title}>
@@ -318,7 +318,7 @@ export default function Classroom(props) {
             </NavLink>
             <NavLink
               exact
-              to={"/admin/classrooms/" + props.match.params.id + "/gr/"}
+              to={"/stu/classrooms/" + props.match.params.id + "/gr/"}
               activeClassName={classes.activelink}
             >
               <Button color="primary" className={classes.title}>

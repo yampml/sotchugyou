@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import * as actions from "./store/actions/actionIndexes";
 import Notifier from "components/Notifier/Notifier";
 // core components
-import Admin from "layouts/Admin.js";
+import StudentPage from "layouts/StudentPage.js";
 import Auth from "layouts/Auth.jsx";
 import { SnackbarProvider } from 'notistack';
 
@@ -39,9 +39,9 @@ export default withRouter(connect(
         <Notifier />
         <Switch>
             { !props.isAuthenticated ? <Route path="/auth" component={Auth} /> : null}
-            { props.isAuthenticated ? <Route path="/admin" component={Admin} />: null}
+            { props.isAuthenticated ? <Route path="/stu" component={StudentPage} />: null}
             { !props.isAuthenticated ? <Redirect from="/" to="/auth" /> : null}
-            { props.isAuthenticated ? <Redirect from="/" to="/admin/dashboard" /> : null}
+            { props.isAuthenticated ? <Redirect from="/" to="/stu/classrooms" /> : null}
         </Switch>
     </SnackbarProvider>
 

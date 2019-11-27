@@ -1,11 +1,10 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Role', {
-    'role_id': {
+  return sequelize.define('Classroom', {
+    'classroom_id': {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-      primaryKey: true,
       primaryKey: true,
       comment: "null",
       autoIncrement: true
@@ -16,6 +15,6 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null"
     }
   }, {
-    tableName: 'Role'
+    tableName: 'Classroom'
   });
 };

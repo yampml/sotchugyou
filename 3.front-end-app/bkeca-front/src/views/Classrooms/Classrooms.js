@@ -248,11 +248,10 @@ let sampleData = [
 ];
 
 export default function Classrooms(props) {
-  console.log("foobar", props)
   const classes = useStyles();
   const [classrooms, setClassrooms] = React.useState([]);
   // eslint-disable-next-line no-unused-vars
-  const [perPage, setPerPage] = React.useState(5);
+  const [perPage, setPerPage] = React.useState(8);
   const [currentPage, setCurrentPage] = React.useState(0);
 
   useEffect(() => {
@@ -292,7 +291,7 @@ export default function Classrooms(props) {
           );
         })}
       </Switch>
-      {props.location.pathname === "/admin/classrooms" ? (
+      {props.location.pathname === "/stu/classrooms" ? (
         <>
           <GridContainer>
             {classrooms.map((classroom, i) => {
@@ -306,7 +305,7 @@ export default function Classrooms(props) {
                 >
                   <Card className={classes.card}>
                     <NavLink
-                      to={"/admin/classrooms/" + i}
+                      to={"/stu/classrooms/" + i}
                     // className={classes.item}
                     // activeClassName="active"
                     // key={"childNav" + childKey}
@@ -388,7 +387,7 @@ export default function Classrooms(props) {
                 breakClassName={"break-me"}
                 pageCount={sampleData.length / perPage}
                 marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
+                pageRangeDisplayed={8}
                 onPageChange={handlePageClick}
                 containerClassName={"pagination"}
                 subContainerClassName={"pages pagination"}
