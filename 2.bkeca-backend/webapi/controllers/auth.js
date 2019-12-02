@@ -17,7 +17,7 @@ exports.signup = (req, res, next) => {
   // const name = req.body.name;
   const password = req.body.password;
   bcrypt
-    .hash(password, 12)
+    .hash(password)
     .then(hashedPw => {
       return registerUser({ userEmail: email, hashedPw })
     })
@@ -59,7 +59,7 @@ exports.login = (req, res, next) => {
       }
       loadedUser = user.dataValues;
       // console.log(user.dataValues)
-      return bcrypt.compare(password, user.dataValues.password);
+      return bcrypt.compare(password, user.dataValues.password_hash);
     })
     .then(isEqual => {
       if (!isEqual) {
@@ -70,12 +70,12 @@ exports.login = (req, res, next) => {
       const token = jwt.sign(
         {
           email: loadedUser.email,
-          userId: loadedUser.id.toString()
+          userId: loadedUser.user_id.toString()
         },
         'somesupersecretsecret',
         { expiresIn: '1h' }
       );
-      res.status(200).json({ token: token, expiresIn: new Date().getTime() + 60*60*1000, userId: loadedUser.id.toString() });
+      res.status(200).json({ token: token, expiresIn: new Date().getTime() + 60*60*1000, userId: loadedUser.user_id.toString() });
     })
     .catch(err => {
       if (!err.statusCode) {

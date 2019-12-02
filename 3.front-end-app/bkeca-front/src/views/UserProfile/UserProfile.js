@@ -112,11 +112,11 @@ export default connect(
     new Date("2014-08-18T21:11:54")
   );
 
-  const [email, setEmail] = React.useState(props.currentUser.email);
+  // const [email, setEmail] = React.useState(props.currentUser.email);
 
-  const bufferToString = buf => {
-    return Buffer.from(buf.data).toString()
-  }
+  // const bufferToString = buf => {
+  //   return Buffer.from(buf.data).toString()
+  // }
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -134,7 +134,7 @@ export default connect(
                 </a>
               </CardAvatar>
               <h4 className={classes.cardTitleWhite}>{props.currentUser.email}</h4>
-              <p className={classes.cardCategoryWhite}>{bufferToString(props.currentUser.private_key)}</p>
+              {/* <p className={classes.cardCategoryWhite}>{bufferToString(props.currentUser.private_key)}</p> */}
             </CardHeader>
             <CardBody>
               <GridContainer>

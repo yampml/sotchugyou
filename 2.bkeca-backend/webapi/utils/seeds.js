@@ -78,7 +78,12 @@ const seedExam = async (count) => {
     
     for(let i=0; i<countExam; i++) {
         let exam = {
-            description: faker.fake("This is {{company.companyName}}'s examination. Schedule is {{date.future}}. Then, {{random.words}}!")
+            description: faker.fake("This is {{company.companyName}}'s examination. Schedule is {{date.future}}. Then, {{random.words}}!"),
+            name: faker.fake("{{company.companyName}}"),
+            start_time: new Date("3 December 2019 13:30:00 GMT+07:00"),
+            end_time: new Date("3 December 2019 21:00:00 GMT+07:00"),
+            duration: 90,
+            status: 'OPENING'
         }
         let newExam = await models.Exam.create({ ...exam });
         await newExam.setClassroom(await models.Classroom.findByPk(i+1));
@@ -92,7 +97,7 @@ const seedQuestion = async (count) => {
     let countExam = count / 4 ;
     for (let i=1; i<=countExam; i++) {
         let exam = await models.Exam.findByPk(i);
-        for(let j=0; j<=15; j++) { //each exam has 15 questions
+        for(let j=0; j<=15; j++) { //each exam has 16 questions
             let question = {
                 description: faker.fake("What is the {{hacker.noun}} of {{hacker.abbreviation}}. {{lorem.words}}? ")
             }
@@ -116,24 +121,25 @@ const seedAnsweredQuestion = async (count) => {
     let studentExams = await models.StudentExam.findAll({limit: 5});
     // let studentExams = await models.StudentExam.findAll();
     // console.log(studentExams)
-    studentExams.forEach(async stu_ex => {
-        let questions = await models.Question.findAll({ where: { exam_id: stu_ex.exam_id }});
-        questions.forEach(async question => {
-            let choices = await question.getChoices();
+    for(let i=0; i<studentExams.length; i++) {
+        await studentExams[i].update({status: 'UNTAKED'})
+        let questions = await models.Question.findAll({ where: { exam_id: studentExams[i].exam_id }});
+        for(let j=0; j<questions.length; j++) {
+            let choices = await questions[j].getChoices();
             let newAnsQues = await models.AnsweredQuestion.create({});
-            await newAnsQues.setStudentExam(stu_ex);
-            await newAnsQues.setQuestion(question);
-            await newAnsQues.setChoice(choices[Math.floor(Math.random() * choices.length) + 1]);
-        })
-    })
+            await newAnsQues.setStudentExam(studentExams[i]);
+            await newAnsQues.setQuestion(questions[j]);
+            await newAnsQues.setChoice(choices[Math.floor(Math.random() * choices.length)]);
+        }
+    }
 }
 
 module.exports = async () => {
-    let count = 20; // number of Users
-    // await seedRole();
-    // await seedUser(count);
-    // await seedClassroom(count);
-    // await seedExam(count);
+    let count = 15; // number of Users
+    await seedRole();
+    await seedUser(count);
+    await seedClassroom(count);
+    await seedExam(count);
     await seedQuestion(count);
     await seedAnsweredQuestion(count);
 }

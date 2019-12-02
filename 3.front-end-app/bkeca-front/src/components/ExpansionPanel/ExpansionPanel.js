@@ -8,7 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Chip from "@material-ui/core/Chip";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
-
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(1),
@@ -39,6 +40,11 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center"
   },
+  columnMain: {
+    flexBasis: "66.66%",
+    display: "flex",
+    alignItems: "center"
+  },
   helper: {
     borderLeft: `2px solid ${theme.palette.divider}`,
     padding: theme.spacing(1, 2)
@@ -52,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DetailedExpansionPanel() {
+export default function DetailedExpansionPanel(props) {
   const classes = useStyles();
 
   return (
@@ -69,40 +75,51 @@ export default function DetailedExpansionPanel() {
               className={classes.headingIcon}
             />
             <Typography className={classes.heading}>
-              Ten Bai Kiem tra
+              {props.examData.name}
             </Typography>
           </div>
-          <div className={classes.column}>
+          <div className={clsx(classes.columnMain, classes.helper)}>
             <Typography className={classes.secondaryHeading}>
-              Bai Kiem Tra description
+              {`Deadline: ${new Date(props.examData.end_time).toDateString()}`}
             </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          <div className={clsx(classes.column, classes.helper)} >
-            <Typography variant="h5">Hạn cuối: 1/1/2020</Typography>
-          </div>
-          <div className={classes.column} />
           <div className={classes.column}>
-            <Chip label="Barbados" onDelete={() => {}} />
+            <Chip label={`STATUS: ${props.examData.status}`} onDelete={() => {}} />
           </div>
-          <div className={clsx(classes.column, classes.helper)}>
+          
+          <div className={clsx(classes.columnMain, classes.helper)} >
+            <Typography variant="subtitle1">{props.examData.description}</Typography>
+          </div>
+          {/* <div className={clsx(classes.column, classes.helper)}>
             <Typography variant="caption">
               <Typography variant="h4">0/10</Typography>
               <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>
+              <a href="#secondary-heading-and-columns" className={classes.link}> show this with instructor only!
                 Đã nộp
               </a>
             </Typography>
-          </div>
+
+          </div> */}
           <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
+            {/* <Typography variant="caption">
               <Typography variant="h4">0/10</Typography>
               <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>
+              <a href="#secondary-heading-and-columns" className={classes.link}>show this with instructor only!
                 Đã chấm điểm
               </a>
-            </Typography>
+            </Typography> */}
+            <Fab
+              color="primary"
+              variant="extended"
+              aria-label="add"
+              // className={classes.fab}
+              onClick={props.onTakeExam}
+            >
+              <AddIcon className={classes.extendedIcon} />
+                Go to Exam!
+            </Fab>
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>

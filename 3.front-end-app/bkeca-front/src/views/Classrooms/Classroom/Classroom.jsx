@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -25,6 +25,8 @@ import ReactPaginate from "react-paginate";
 
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+import { user_instance as axios } from '../../../apiCaller';
 
 const useStyles = makeStyles(theme => ({
   paperRoot: {
@@ -96,193 +98,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-let sampleData = [
-  {
-    title: "someText",
-    subheader: "someText",
-    imgAlt: "someTExt",
-    summarizedContent: "someText",
-    content: [
-      {
-        naiyou:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-      },
-      {
-        naiyou:
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText2",
-    subheader: "someText2",
-    imgAlt: "someTExt2",
-    summarizedContent: "someText2",
-    content: [
-      {
-        naiyou: "someText2"
-      },
-      {
-        naiyou: "someText2"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText3",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText4",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText5",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText6",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText7",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText8",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText9",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText10",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText11",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  },
-  {
-    title: "someText12",
-    subheader: "someText3",
-    imgAlt: "someTExt3",
-    summarizedContent: "someText3",
-    content: [
-      {
-        naiyou: "someText3"
-      },
-      {
-        naiyou: "someText3"
-      }
-    ],
-    expanded: false
-  }
-];
-
 export default function Classroom(props) {
   const classes = useStyles();
+
+  const [classroom, setClassroom] = React.useState(null);
+  useEffect(() => {
+    loadClassroom();
+  }, []);
+
+  const loadClassroom = async () => {
+    const url = "/classroom/" + props.match.params.id;
+    const classroomData = await axios.get(url)
+      .then(res => {
+        return res.data.classroom;
+      })
+      setClassroom(classroomData);
+  };
 
   return (
     <>
@@ -335,10 +166,10 @@ export default function Classroom(props) {
               </CardActionArea>
               <CardActions>
                 <Button size="small" color="primary">
-                  Lớp học của Híu
+                  {"" + (classroom == null ? null : classroom.name) }
                 </Button>
                 <Button size="small" color="primary">
-                  Thầy giáo Be
+                  {"<Instructor Name Here"}
                 </Button>
               </CardActions>
             </Card>

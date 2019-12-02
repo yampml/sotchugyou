@@ -11,6 +11,7 @@ const { User } = require('./models/modelsIndex');
 // const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const classroomRoutes = require('./routes/classroom');
 
 const seeds = require('./utils/seeds');
 
@@ -57,7 +58,7 @@ app.use((req, res, next) => {
 // app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
 app.use('/api', userRoutes);
-
+app.use('/api', classroomRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -74,9 +75,9 @@ sequelize
     return sequelize.sync()
     return sequelize.sync({ force: true }) 
   })
-  .then(() => {
-    return seeds();
-  })
+  // .then(() => {
+  //   return seeds();
+  // })
   .then(() => {
     return sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
   })

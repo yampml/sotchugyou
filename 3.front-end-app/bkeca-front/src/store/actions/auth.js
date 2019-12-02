@@ -163,8 +163,9 @@ export const fetchCurrentUser = (userID, token) => {
         }
       })
       .then( result => {
-        const { id, email, created_at, private_key, cert_pem }  = result.data.user;
-        dispatch(setCurrentUser( { id, email, created_at, private_key, cert_pem } ));
+        // console.log(result)
+        const { user_id, username, email, created_at, private_key, cert_pem }  = result.data.user;
+        dispatch(setCurrentUser( { user_id, username, email, created_at, private_key, cert_pem } ));
       })
   }
 }

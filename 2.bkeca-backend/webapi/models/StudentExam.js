@@ -24,9 +24,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
-      primaryKey: true,
       comment: "null",
       autoIncrement: true
+    },
+    'status': {
+      type: DataTypes.ENUM({
+        values: ['UNTAKED', 'TAKING', 'TAKED']
+      }),
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'StudentExam'

@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     position: "relative"
   },
+  fixedBar: {
+    position: "fixed"
+  },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1
@@ -28,6 +31,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialog(props) {
   const classes = useStyles();
 
+
+  const [timeLeft, setTimeLeft] = React.useState(props.duration * 60);
+
+  React.useEffect(() => {
+    const timeLeftInterval = setInterval(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+    return () => clearInterval(timeLeftInterval);
+  }, [timeLeft]);
+
+  const timeLeftFormat = () => {
+    return `${Number.parseInt(timeLeft/60)}:${timeLeft%60}`;
+  }
+
   return (
     <div>
       <Dialog
@@ -36,7 +53,7 @@ export default function FullScreenDialog(props) {
         onClose={props.handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar className={classes.appBar}>
+        <AppBar className={[classes.appBar, classes.fixedBar].join(' ')}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -47,10 +64,10 @@ export default function FullScreenDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              [PROPS TITLE HERE]
+              {props.title}
             </Typography>
-            <Button autoFocus color="inherit" onClick={props.handleClose}>
-              [PROPS ACTION BUTTON HERE]
+            <Button autoFocus color="inherit" >
+              {"TIME LEFT: " + timeLeftFormat()}
             </Button>
           </Toolbar>
         </AppBar>

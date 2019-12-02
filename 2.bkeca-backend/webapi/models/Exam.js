@@ -23,6 +23,33 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false,
       comment: "null"
+    },
+    'start_time': {
+      type: 'TIMESTAMP',
+      allowNull: true,
+      comment: "null"
+    },
+    'end_time': {
+      type: 'TIMESTAMP',
+      allowNull: true,
+      comment: "null"
+    },
+    'name': {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: "null"
+    },
+    'duration': {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      comment: "null"
+    },
+    'status': {
+      type: DataTypes.ENUM({
+        values: ['OPENING', 'CLOSING']
+      }),
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'Exam'

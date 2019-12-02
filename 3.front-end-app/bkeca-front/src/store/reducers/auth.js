@@ -4,7 +4,7 @@ import { updateObject } from "../utility";
 const initialState = {
   token: null,
   userId: "",
-  currentUser: null, //id, email, created_at, private_key, cert_pem
+  currentUser: null, //user_id, email, created_at, private_key, cert_pem
   error: "",
   loading: false,
   authRedirectPath: "/"

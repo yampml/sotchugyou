@@ -17,7 +17,7 @@ const checkUser = (req, currentUserID) => {
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, 'somesupersecretsecret');
-    console.log(decodedToken)
+    // console.log(decodedToken)
     if (decodedToken.userId != currentUserID) return false;
     else return true;
   } catch (err) {
@@ -58,7 +58,7 @@ exports.getUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if(checkUser(req, user.id)) res.status(200).json({ message: 'User fetched.', user: user });
+      if(checkUser(req, user.user_id)) res.status(200).json({ message: 'User fetched.', user: { ...user.dataValues } });
       else res.status(500).json({ message: 'Forbidden !'})
     })
     .catch(err => {
