@@ -66,6 +66,7 @@ export default function FullScreenDialog(props) {
             <Typography variant="h6" className={classes.title}>
               {props.title}
             </Typography>
+            {props.submitBtn ? props.submitBtn : null}
             <Button autoFocus color="inherit" >
               {"TIME LEFT: " + timeLeftFormat()}
             </Button>

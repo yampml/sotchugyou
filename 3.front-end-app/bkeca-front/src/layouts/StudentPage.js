@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -10,7 +10,7 @@ import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-import { dashboardRoutes } from "routes.js";
+import { studentRoutes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -25,47 +25,37 @@ import { useTranslation } from "react-i18next";
 
 let ps;
 
-const switchRoutes = props => (
-  <Switch>
-    {/* {classroomsRoutes.map((prop, key) => {
-      console.log("Props 2:", prop);
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key + "!@#"}
-          />
-        );
-      }
-      return null;
-    })} */}
+const switchRoutes = props => {
+  const currentUser = props.currentUser;
+  return (
+    <Switch>
+      {studentRoutes.map((prop, key) => {
+        if (prop.layout === "/stu") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              render={props => (
+                <prop.component {...props} currentUser={currentUser} childLink={prop.childLink} />
+              )}
+              // component={() => <prop.component childLink={prop.childLink} />}
+              key={key}
+              exact={prop.exact}
+            />
+          );
+        }
+        return null;
+      })}
 
-    {dashboardRoutes.map((prop, key) => {
-      if (prop.layout === "/stu") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            render={props => (
-              <prop.component {...props} childLink={prop.childLink} />
-            )}
-            // component={() => <prop.component childLink={prop.childLink} />}
-            key={key}
-            exact={prop.exact}
-          />
-        );
-      }
-      return null;
-    })}
-
-    <Redirect from="/stu" to="/stu/dashboard" />
-  </Switch>
-);
+      <Redirect from="/stu" to="/stu/dashboard" />
+    </Switch>
+  )
+};
 
 const useStyles = makeStyles(styles);
 
 const mapStateToProps = state => {
   return {
+    currentUser: state.auth.userId,
     loading: state.auth.loading,
     error: state.auth.error,
     isAuthenticated: state.auth.token !== null,
@@ -83,7 +73,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
 )(function StudentPage({ ...props }) {
@@ -140,10 +130,10 @@ export default connect(
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-  return(
+  return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={dashboardRoutes}
+        routes={studentRoutes}
         logoText={t("SideBar.LogoText")}
         logo={logo}
         image={image}
@@ -154,7 +144,7 @@ export default connect(
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-          routes={dashboardRoutes}
+          routes={studentRoutes}
           handleDrawerToggle={handleDrawerToggle}
           {...props}
         />
@@ -164,8 +154,8 @@ export default connect(
             <div className={classes.container}>{switchRoutes({ ...props })}</div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes({ ...props })}</div>
-        )}
+            <div className={classes.map}>{switchRoutes({ ...props })}</div>
+          )}
         {getRoute() ? <Footer /> : null}
         <FixedPlugin
           handleImageClick={handleImageClick}
@@ -179,4 +169,4 @@ export default connect(
     </div>
   );
 }
-)
+))

@@ -40,6 +40,9 @@ router.get('/question/:questionID/choices', classroomController.getQuestionChoic
 // GET /api/classroom/:id/examAllInfo
 router.get('/classroom/:classroomID/examAllInfo', classroomController.getClassroomExamAllInfo);
 
+// POST /api/submitExam
+router.post('/submitExam', classroomController.submitStudentExam);
+
 // GET /api/classroom/:id/exam/:id
 
 

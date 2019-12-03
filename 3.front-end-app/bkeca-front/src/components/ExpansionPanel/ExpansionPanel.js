@@ -9,7 +9,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Chip from "@material-ui/core/Chip";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+
 const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(1),
@@ -86,9 +87,13 @@ export default function DetailedExpansionPanel(props) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <div className={classes.column}>
-            <Chip label={`STATUS: ${props.examData.status}`} onDelete={() => {}} />
+            <Chip 
+              color={props.examData.status === 'OPENING' ? 'primary' : 'secondary'} 
+              variant="outlined" 
+              label={`STATUS: ${props.examData.status}`} 
+            />
           </div>
-          
+
           <div className={clsx(classes.columnMain, classes.helper)} >
             <Typography variant="subtitle1">{props.examData.description}</Typography>
           </div>
@@ -103,23 +108,19 @@ export default function DetailedExpansionPanel(props) {
 
           </div> */}
           <div className={clsx(classes.column, classes.helper)}>
-            {/* <Typography variant="caption">
-              <Typography variant="h4">0/10</Typography>
-              <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>show this with instructor only!
-                Đã chấm điểm
-              </a>
-            </Typography> */}
-            <Fab
-              color="primary"
-              variant="extended"
-              aria-label="add"
-              // className={classes.fab}
-              onClick={props.onTakeExam}
-            >
-              <AddIcon className={classes.extendedIcon} />
+            { props.examData.status === 'OPENING' ? 
+              <Fab
+                color="primary"
+                variant="extended"
+                aria-label="add"
+                // className={classes.fab}
+                onClick={props.onTakeExam}
+              >
+                <ArrowForwardIcon className={classes.extendedIcon} />
                 Go to Exam!
-            </Fab>
+              </Fab> 
+              : null
+            }
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>

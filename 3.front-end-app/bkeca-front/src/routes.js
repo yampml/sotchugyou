@@ -12,7 +12,7 @@ import People from "views/Classrooms/Classroom/People.jsx";
 
 import FullScreenDialog from "components/FullScreenDialog/FullScreenDialog.jsx";
 
-export const dashboardRoutes = [
+export const studentRoutes = [
   {
     path: "/classrooms", name: "Classrooms", icon: "content_paste", component: Classrooms, layout: "/stu",
     childLink: [

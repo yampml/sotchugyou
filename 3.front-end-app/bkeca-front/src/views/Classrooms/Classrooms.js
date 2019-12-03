@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, NavLink } from "react-router-dom";
 // core components
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -25,7 +25,6 @@ import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem.js";
 
 import ReactPaginate from "react-paginate";
-import { NavLink } from "react-router-dom/cjs/react-router-dom";
 
 import { user_instance as axios } from '../../apiCaller';
 
@@ -71,7 +70,6 @@ export default function Classrooms(props) {
   const [perPage, setPerPage] = React.useState(2);
   const [currentPage, setCurrentPage] = React.useState(0);
   // const [selectedClassroom, setSelectedClassroom] = React.useState(null);
-
   useEffect(() => {
     loadClassrooms();
   }, []);
@@ -96,6 +94,7 @@ export default function Classrooms(props) {
     setClassrooms(classrooms2);
   };
 
+  const currentUser = props.currentUser;
   return (
     <>
       <Switch>
@@ -103,7 +102,9 @@ export default function Classrooms(props) {
           return (
             <Route
               path={prop.layout + prop.path}
-              component={prop.component}
+              render={props => (
+                <prop.component {...props} currentUser={currentUser} childLink={prop.childLink} />
+              )}
               key={"ClassroomsNumber" + key}  
               exact={prop.exact}
               childRoute={prop.childLink}

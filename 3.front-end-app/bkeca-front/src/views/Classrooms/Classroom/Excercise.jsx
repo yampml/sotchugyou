@@ -28,6 +28,7 @@ import FullScreenDialog from "components/FullScreenDialog/FullScreenDialog";
 import AlertDialogSlide from "components/AlertDialogSlide/AlertDialogSlide";
 
 import { user_instance as axios } from '../../../apiCaller';
+
 const useStyles = makeStyles(theme => ({
   paperRoot: {
     padding: theme.spacing(3, 2)
@@ -130,51 +131,12 @@ export default function Exercises(props) {
         return res.data.classroomData;
       })
     setClassroomData(classroomData);
-    console.log(classroomData);
+    // console.log(classroomData);
   };
 
   const handleClose = () => {
     setExDialogOpen(false);
   };
-
-
-  // const toggleAddNewQuesBtn = () => {
-  //   setAddNewQues(!addNewQues);
-  // };
-
-  // const handleNewQuesChange = (event, args) => {
-  //   console.log(event.target.value);
-  //   console.log(args);
-  //   let newQuesData2 = { ...newQuesData };
-  //   if (args.type === "quesNaiyou") {
-  //     newQuesData2.ques = event.target.value;
-  //   } else if (args.type === "choices") {
-  //     newQuesData2.choices[args.index] = event.target.value;
-  //   } else if (args.type === "answer") {
-  //     newQuesData2.ans = Number.parseInt(event.target.value);
-  //   }
-  //   setNewQues(newQuesData2);
-  // };
-
-  // const handleNewQuesAnsBtn = () => {
-  //   let newQuesData2 = { ...newQuesData, choices: [...newQuesData.choices] };
-  //   newQuesData2.choices.push("");
-  //   setNewQues(newQuesData2);
-  // };
-
-  // const handleAddNewQuesBtnOk = () => {
-  //   let newExData = [...exData];
-  //   newExData.push({
-  //     ...newQues,
-  //     choices: [...newQues.choices],
-  //     usrChoice: ""
-  //   });
-  //   setExData(newExData);
-  //   setNewQues({ ...newQuesData, choices: [""] });
-  //   setAddNewQues(false);
-  // };
-
-
 
   const handleChangeKotae = (event, shitsumonIndex) => {
     let newUserChoices = [...userChoices];
@@ -191,13 +153,50 @@ export default function Exercises(props) {
     handleConfirmDialogClickClose();
     setExData(classroomData.Exams[exIndex])
     let newUserChoices = Array(classroomData.Exams[exIndex].Questions.length).fill(`question-${null}-choice-${null}`);
-    setUserChoices(userChoices);
+    setUserChoices(newUserChoices);
     setExDialogOpen(true);
   }
 
   const handleConfirmDialogClickClose = () => {
     setConfirmDialog(false);
   };
+
+  const onSubmitExam = () => {
+    let answerData = [];
+    for (let i = 0; i < userChoices.length; i++) {
+      let ans = userChoices[i].split('-');
+      let choiceIndex = null;
+      try {
+        choiceIndex = Number.parseInt(ans[3]);
+
+      } catch {
+
+      }
+      answerData.push({
+        question_id: exData.Questions[i].question_id,
+        choice_id: choiceIndex ? exData.Questions[i].Choices[choiceIndex].choice_id : null
+      });
+
+    }
+    let submitData = {
+      exam_id: exData.exam_id,
+      classroom_id: exData.classroom_id,
+      user_id: props.currentUser,
+      answerData
+    }
+    /* 
+    {"exam_id":1,"classroom_id":1,"user_id":"1","answerData":[{"question_id":1,"choice_id":3},{"question_id":2,"choice_id":6},{"question_id":3,"choice_id":10},{"question_id":4,"choice_id":null},{"question_id":5,"choice_id":19},{"question_id":6,"choice_id":null},{"question_id":7,"choice_id":null},{"question_id":8,"choice_id":null},{"question_id":9,"choice_id":null},{"question_id":10,"choice_id":null},{"question_id":11,"choice_id":null},{"question_id":12,"choice_id":null},{"question_id":13,"choice_id":null},{"question_id":14,"choice_id":null},{"question_id":15,"choice_id":null},{"question_id":16,"choice_id":null}]}
+    */
+    const url = "/submitExam";
+    axios.post(url, submitData)
+      .then(result => {
+        console.log(result);
+      })
+  }
+
+  const clearExam = () => {
+
+  }
 
   const examDialog = () => {
     return (
@@ -238,88 +237,6 @@ export default function Exercises(props) {
                 </React.Fragment>
               );
             }) : null}
-            {/* {addNewQues === true ? (
-              <GridContainer>
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <GridItem xs={12} sm={12} md={12}>
-                    <FormLabel component="legend">New Question</FormLabel>
-                    <TextField
-                      id="standard-name"
-                      label="Question naiyou"
-                      className={classes.textField}
-                      value={newQues.ques}
-                      onChange={event =>
-                        handleNewQuesChange(event, { type: "quesNaiyou" })
-                      }
-                      margin="normal"
-                    />
-                    <TextField
-                      id="standard-name"
-                      label="Right answer: "
-                      className={classes.textField}
-                      value={newQues.answer}
-                      onChange={event =>
-                        handleNewQuesChange(event, { type: "answer" })
-                      }
-                      margin="normal"
-                    />
-                    {newQues.choices.map((choice, index) => {
-                      return (
-                        <TextField
-                          key={"newQues" + index}
-                          id="standard-name"
-                          label={"Choice number: " + (index + 1)}
-                          className={classes.textField}
-                          value={choice}
-                          onChange={event =>
-                            handleNewQuesChange(event, {
-                              type: "choices",
-                              index
-                            })
-                          }
-                          margin="normal"
-                        />
-                      );
-                    })}
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <Button
-                      color="primary"
-                      onClick={handleNewQuesAnsBtn}
-                      className={classes.title}
-                    >
-                      New Choices
-                      </Button>
-                    <Button
-                      color="primary"
-                      className={classes.title}
-                      onClick={handleAddNewQuesBtnOk}
-                    >
-                      OK
-                      </Button>
-                    <Button color="primary" className={classes.title}>
-                      Cancel
-                      </Button>
-                  </GridItem>
-                </FormControl>
-              </GridContainer>
-            ) : null} */}
-            {/* <GridContainer justify="flex-end">
-              <GridItem xs={12} sm={12} md={2}>
-                <Fab
-                  color="primary"
-                  variant="extended"
-                  aria-label="add"
-                  className={classes.fab}
-                  onClick={toggleAddNewQuesBtn}
-                >
-                  <AddIcon />
-                </Fab>
-              </GridItem>
-            </GridContainer> */}
           </Paper>
         </GridItem>
       </GridContainer>
@@ -369,7 +286,7 @@ export default function Exercises(props) {
             </NavLink>
           </GridItem>
         </GridContainer>
-        <GridContainer justify="center">
+        {/* <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
             <Fab
               color="primary"
@@ -382,7 +299,7 @@ export default function Exercises(props) {
               Create
             </Fab>
           </GridItem>
-        </GridContainer>
+        </GridContainer> */}
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
             {
@@ -414,6 +331,7 @@ export default function Exercises(props) {
           duration={exData.duration}
           exDialogOpen={exDialogOpen}
           handleClose={handleClose}
+          submitBtn={<Button color="inherit" onClick={onSubmitExam}>SUBMIT</Button>}
         >
           {classroomData != null ? examDialog() : null}
         </FullScreenDialog> : null}
