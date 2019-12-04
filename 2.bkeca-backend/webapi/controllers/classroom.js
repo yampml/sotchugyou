@@ -3,7 +3,7 @@ const path = require('path');
 
 const { validationResult } = require('express-validator/check');
 
-const { Classroom, Exam, Question, Choice, StudentExam, AnsweredQuestion } = require('../models/modelsIndex');
+const { Classroom, Exam, Question, Choice, StudentExam, AnsweredQuestion, User, Student } = require('../models/modelsIndex');
 const jwt = require('jsonwebtoken');
 
 const checkUser = (req, currentUserID) => {
@@ -39,6 +39,35 @@ exports.getClassrooms = (req, res, next) => {
         message: 'Fetched classrooms successfully.',
         classrooms: classrooms,
         totalItems: totalItems
+      });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+
+exports.getClassroomsbyUser = (req, res, next) => {
+  const user_id = req.params.user_id;
+  const currentPage = req.query.page || 1;
+  const perPage = 5;
+  User.findByPk(user_id)
+    .then(user => {
+      return user.getStudent();
+    })
+    .then(student => {
+      return student.getClassrooms();
+    })
+    .then(classrooms => {
+      let start = (currentPage - 1) * perPage;
+      let resData = classrooms.slice(start, start + perPage);
+      res.status(200).json({
+        message: 'Fetched classrooms successfully.',
+        classrooms: resData,
+        totalItems: classrooms.length
       });
     })
     .catch(err => {
@@ -143,9 +172,9 @@ exports.getQuestionChoices = (req, res, next) => {
 
 exports.getClassroomExamAllInfo = (req, res, next) => {
   const classroomID = req.params.classroomID;
-  Classroom.findByPk(classroomID, { 
+  Classroom.findByPk(classroomID, {
     include: [
-      { 
+      {
         model: Exam,
         required: true,
         include: [
@@ -159,18 +188,18 @@ exports.getClassroomExamAllInfo = (req, res, next) => {
               }
             ]
           }
-        ] 
+        ]
       }
-    ] 
+    ]
   })
     .then(classroomData => {
+      console.log(classroomData);
       if (!classroomData) {
-        const error = new Error('Could not find classroom with ID ' + classroom + '!');
+        const error = new Error('Could not find classroom with ID ' + classroomID + '!');
         error.statusCode = 404;
         throw error;
       }
       // else res.status(500).json({ message: 'Forbidden !'})
-      console.log(classroomData);
       res.status(200).json({ message: 'Classroom\'s data (exams, questions, choices)  fetched', classroomData });
     })
     .catch(err => {
@@ -186,131 +215,47 @@ exports.submitStudentExam = (req, res, next) => {
   /* 
     {"exam_id":1,"classroom_id":1,"user_id":"1","answerData":[{"question_id":1,"choice_id":3},{"question_id":2,"choice_id":6},{"question_id":3,"choice_id":10},{"question_id":4,"choice_id":null},{"question_id":5,"choice_id":19},{"question_id":6,"choice_id":null},{"question_id":7,"choice_id":null},{"question_id":8,"choice_id":null},{"question_id":9,"choice_id":null},{"question_id":10,"choice_id":null},{"question_id":11,"choice_id":null},{"question_id":12,"choice_id":null},{"question_id":13,"choice_id":null},{"question_id":14,"choice_id":null},{"question_id":15,"choice_id":null},{"question_id":16,"choice_id":null}]}
   */
-  StudentExam.findAll({
-    where: {
-      student_id: requestData.user_id,
-      exam_id: requestData.exam_id,
-      // status: 'TAKING'
-    }
-  })
-  .then( async result => {
-    const answerData = requestData.answerData;
-    console.log(answerData)
-    if(result[0]) {
-      await result[0].destroy()
-      await AnsweredQuestion.destroy({ where: { student_exam_id: result[0].student_exam_id }});
-    };
-    let studentExam = await StudentExam.create({ student_id: requestData.user_id, exam_id: requestData.exam_id, status: 'TAKED' });
-    
+ console.log(req.body)
+  User.findByPk(requestData.user_id)
+    .then(result => {
+      return StudentExam.findAll({
+        where: {
+          student_id: result.student_id,
+          exam_id: requestData.exam_id,
+          // status: 'TAKING'
+        }
+      })
+    })
+    .then(async result => {
+      const answerData = requestData.answerData;
+      console.log(answerData)
+      if (result[0]) {
+        await result[0].destroy()
+        await AnsweredQuestion.destroy({ where: { student_exam_id: result[0].student_exam_id } });
+      };
+      let studentExam = await StudentExam.create({ student_id: requestData.user_id, exam_id: requestData.exam_id, status: 'TAKED' });
 
+      for (let i = 0; i < answerData.length; i++) {
+        let answeredQuestion = await AnsweredQuestion.create({ question_id: answerData[i].question_id, choice_id: answerData[i].choice_id, student_exam_id: studentExam.student_exam_id });
+      }
 
-    for(let i=0; i<answerData.length; i++) {
-      let answeredQuestion = await AnsweredQuestion.create({ question_id: answerData[i].question_id, choice_id: answerData[i].choice_id, student_exam_id: studentExam.student_exam_id });
-    }
-
-    res.status(200).json({ message: 'Student Exam submitted successfully'});
-  })
-  .catch(err => {
-    res.status(404).json({ message: 'Student Exam not found: ', err });
-  })
-
+      res.status(200).json({ message: 'Student Exam submitted successfully' });
+    })
+    .catch(err => {
+      res.status(404).json({ message: 'Error!: ', err });
+    })
 }
 
-// exports.updateUser = (req, res, next) => {
-//   const userID = req.params.userID;
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     const error = new Error('Validation failed, entered data is incorrect.');
-//     error.statusCode = 422;
-//     throw error;
-//   }
-//   const email = req.body.email;
-//   User.findByPk(userID)
-//     .then(user => {
-//       if (!user) {
-//         const error = new Error('Could not find post.');
-//         error.statusCode = 404;
-//         throw error;
-//       }
-//       user.email = email;
-//       return user.save();
-//     })
-//     .then(result => {
-//       res.status(200).json({ message: 'User updated!', user: result });
-//     })
-//     .catch(err => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };
+exports.allTakenExam = async (req, res, next) => {
+  try {
+    const user_id = req.params.user_id;
+    const user = await User.findByPk(user_id);
+    console.log("LOGGGGGGGGGGGGGGGG ", user.student_id);
+    const studentExams = await StudentExam.findAll({ where: { student_id: user.student_id } });
+    // console.log(studentExams)
+    res.status(201).json( {studentExams} );
 
-// exports.createPost = (req, res, next) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     const error = new Error('Validation failed, entered data is incorrect.');
-//     error.statusCode = 422;
-//     throw error;
-//   }
-//   if (!req.file) {
-//     const error = new Error('No image provided.');
-//     error.statusCode = 422;
-//     throw error;
-//   }
-//   const imageUrl = req.file.path;
-//   const title = req.body.title;
-//   const content = req.body.content;
-//   let creator;
-//   const post = new Post({
-//     title: title,
-//     content: content,
-//     imageUrl: imageUrl,
-//     creator: req.userId
-//   });
-//   post
-//     .save()
-//     .then(result => {
-//       return User.findById(req.userId);
-//     })
-//     .then(user => {
-//       creator = user;
-//       user.posts.push(post);
-//       return user.save();
-//     })
-//     .then(result => {
-//       res.status(201).json({
-//         message: 'Post created successfully!',
-//         post: post,
-//         creator: { _id: creator._id, name: creator.name }
-//       });
-//     })
-//     .catch(err => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };
-
-// exports.deleteUser = (req, res, next) => {
-//   const userID = req.params.userID;
-//   User.findByPk(userID)
-//     .then(user => {
-//       if (!user) {
-//         const error = new Error('Could not find user.');
-//         error.statusCode = 404;
-//         throw error;
-//       }
-//       return user.destroy();
-//     })
-//     .then(result => {
-//       res.status(200).json({ message: 'Deleted user.' });
-//     })
-//     .catch(err => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };
+  } catch (e) {
+    res.status(404).json({ message: 'Error!: ', e });
+  }
+}

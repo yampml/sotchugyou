@@ -43,7 +43,11 @@ router.get('/classroom/:classroomID/examAllInfo', classroomController.getClassro
 // POST /api/submitExam
 router.post('/submitExam', classroomController.submitStudentExam);
 
-// GET /api/classroom/:id/exam/:id
+// GET /api/user/:id/allTakenExams
+router.get('/user/:user_id/allTakenExams', classroomController.allTakenExam);
+
+// GET /api/user/:user_id/classrooms
+router.get('/user/:user_id/classrooms', classroomController.getClassroomsbyUser);
 
 
 module.exports = router;

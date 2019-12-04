@@ -32,6 +32,8 @@ const seedUser = async (count) => {
             
             user_child = await models.Instructor.create({});
             await usr.setInstructor(user_child);
+            user_child = await models.Student.create({});
+            await usr.setStudent(user_child);
         } else {
             let role = await models.Role.findByPk(2);
             await usr.setRole(role);
