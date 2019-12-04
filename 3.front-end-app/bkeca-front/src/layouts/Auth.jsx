@@ -88,7 +88,7 @@ export default connect(
   const classes = useStyles();
 
 
-  const [email, setEmail] = React.useState("Mervin.Graham@hotmail.com");
+  const [email, setEmail] = React.useState("Jerry_Jerde91@gmail.com");
   const [password, setPassword] = React.useState("foobarpassword");
   const [isSignUp, setIsSignUp] = React.useState(true);
 

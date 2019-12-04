@@ -28,6 +28,9 @@ import ReactPaginate from "react-paginate";
 
 import { user_instance as axios } from '../../apiCaller';
 
+// redux
+import { connect } from "react-redux";
+import * as actions from "store/actions/actionIndexes";
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345
@@ -63,7 +66,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Classrooms(props) {
+
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    enqueueSnackbar: (notification) => dispatch(actions.enqueueSnackbar(notification)),
+    closeSnackbar: (key) => dispatch(actions.closeSnackbar(key))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(function Classrooms(props) {
   const classes = useStyles();
   const [classrooms, setClassrooms] = React.useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -75,7 +94,7 @@ export default function Classrooms(props) {
   }, []);
 
   const loadClassrooms = async () => {
-    const url = "/classrooms";
+    const url = "/user/" + props.currentUser + "/classrooms";
     const classroomsData = await axios.get(url)
       .then(res => {
         return res.data.classrooms;
@@ -223,3 +242,4 @@ export default function Classrooms(props) {
     </>
   );
 }
+)

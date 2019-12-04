@@ -15,7 +15,8 @@ const useStyles = makeStyles(theme => ({
     position: "relative"
   },
   fixedBar: {
-    position: "fixed"
+    position: "fixed",
+    top: "0"
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -44,12 +45,12 @@ export default function FullScreenDialog(props) {
   const timeLeftFormat = () => {
     return `${Number.parseInt(timeLeft/60)}:${timeLeft%60}`;
   }
-
+  
   return (
     <div>
       <Dialog
         fullScreen
-        open={props.exDialogOpen}
+        open={props.open}
         onClose={props.handleClose}
         TransitionComponent={Transition}
       >

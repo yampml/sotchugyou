@@ -61,7 +61,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function DetailedExpansionPanel(props) {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <ExpansionPanel defaultExpanded={false}>
@@ -81,8 +80,9 @@ export default function DetailedExpansionPanel(props) {
           </div>
           <div className={clsx(classes.columnMain, classes.helper)}>
             <Typography className={classes.secondaryHeading}>
-              {`Deadline: ${new Date(props.examData.end_time).toDateString()}`}
+              {`Deadline: ${new Date(props.examData.end_time).toDateString()}  `}
             </Typography>
+            {props.examTakenChip()}
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
@@ -108,7 +108,21 @@ export default function DetailedExpansionPanel(props) {
 
           </div> */}
           <div className={clsx(classes.column, classes.helper)}>
-            { props.examData.status === 'OPENING' ? 
+            {
+              props.isDone === true ?
+              <Fab
+                color="secondary"
+                variant="extended"
+                aria-label="add"
+                // className={classes.fab}
+                onClick={props.onOpenResult}
+              >
+                <ArrowForwardIcon className={classes.extendedIcon} />
+                  View Result
+              </Fab> 
+              : null
+            }
+            { (props.examData.status === 'OPENING' && props.isDone !== true) ? 
               <Fab
                 color="primary"
                 variant="extended"

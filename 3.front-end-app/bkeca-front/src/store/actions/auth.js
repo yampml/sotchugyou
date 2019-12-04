@@ -162,10 +162,11 @@ export const fetchCurrentUser = (userID, token) => {
           Authorization: 'Bearer ' + token
         }
       })
-      .then( result => {
-        // console.log(result)
+      .then( async result => {
+        const userTakenExam = await userxios.get(url + "/allTakenExams");
+        const studentExams = userTakenExam.data.studentExams;
         const { user_id, username, email, created_at, private_key, cert_pem }  = result.data.user;
-        dispatch(setCurrentUser( { user_id, username, email, created_at, private_key, cert_pem } ));
+        dispatch(setCurrentUser( { user_id, username, email, created_at, private_key, cert_pem, studentExams } ));
       })
   }
 }
