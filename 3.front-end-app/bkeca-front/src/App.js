@@ -7,6 +7,7 @@ import Notifier from "components/Notifier/Notifier";
 import StudentPage from "layouts/StudentPage.js";
 import Auth from "layouts/Auth.jsx";
 import { SnackbarProvider } from 'notistack';
+import { Portal } from "@material-ui/core";
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -36,7 +37,7 @@ export default withRouter(connect(
             vertical: 'top', // top; bottom
             horizontal: 'right', // left; center; right
         }}>
-        <Notifier />
+        <Portal><Notifier /></Portal>
         <Switch>
             { !props.isAuthenticated ? <Route path="/auth" component={Auth} /> : null}
             { props.isAuthenticated ? <Route path="/stu" component={StudentPage} />: null}

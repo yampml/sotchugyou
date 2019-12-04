@@ -5,7 +5,6 @@ const models = require('../models/modelsIndex');
 faker.locale = "en" // en ja vi
 faker.seed(123);
 
-
 const seedRole = async () => {
     await models.Role.truncate();
     await models.Role.create({ name: "Student" });
@@ -45,7 +44,7 @@ const seedUser = async (count) => {
 }
 
 const seedClassroom = async (count) => {
-    let countClassroom = count / 4; // number of classrooms = number of users / 4;
+    let countClassroom = Math.floor(count / 4); // number of classrooms = number of users / 4;
     await models.Classroom.truncate();
     await models.InstructorClassroom.truncate();
     await models.StudentClassroom.truncate();
@@ -59,14 +58,14 @@ const seedClassroom = async (count) => {
         }
         let newClassroom = await models.Classroom.create({ ...classroom });
         
-        if(i < countClassroom/2) {
+        if(i < Math.floor(countClassroom/2)) {
             await newClassroom.addInstructor(instructor1);
-            for(let j=count-2; j>(count-2)/2; j--) {
+            for(let j=count-2; j>Math.floor((count-2)/2); j--) {
                 await newClassroom.addStudent(await models.Student.findByPk(j));
             }
         } else {
             await newClassroom.addInstructor(instructor2);
-            for(let j=(count-2)/2-1; j>0; j--) {
+            for(let j=Math.floor((count-2)/2-1); j>0; j--) {
                 await newClassroom.addStudent(await models.Student.findByPk(j));
             }
         }
@@ -74,7 +73,7 @@ const seedClassroom = async (count) => {
 }
 
 const seedExam = async (count) => {
-    let countExam = count / 4;
+    let countExam = count;
     await models.Exam.truncate();
     await models.StudentExam.truncate();
     
@@ -84,21 +83,23 @@ const seedExam = async (count) => {
             name: faker.fake("{{company.companyName}}"),
             start_time: new Date("3 December 2019 13:30:00 GMT+07:00"),
             end_time: new Date("3 December 2019 21:00:00 GMT+07:00"),
-            duration: 90,
+            duration: 3,
             status: 'OPENING'
         }
         let newExam = await models.Exam.create({ ...exam });
-        await newExam.setClassroom(await models.Classroom.findByPk(i+1));
-        await newExam.addStudents(await models.Student.findAll());
+        await newExam.setClassroom(await models.Classroom.findByPk((i % Math.floor(count/4))+1));
+        const classroom = await models.Classroom.findByPk((i % Math.floor(count/4)) + 1);
+        const classroomstudents = await classroom.getStudents();
+        await newExam.addStudents(classroomstudents);
     }
 }
 
 const seedQuestion = async (count) => {
     await models.Question.truncate();
     await models.Choice.truncate();
-    let countExam = count / 4 ;
-    for (let i=1; i<=countExam; i++) {
-        let exam = await models.Exam.findByPk(i);
+    let countExam = count ;
+    for (let i=0; i<countExam; i++) {
+        let exam = await models.Exam.findByPk(i+1);
         for(let j=0; j<=15; j++) { //each exam has 16 questions
             let question = {
                 description: faker.fake("What is the {{hacker.noun}} of {{hacker.abbreviation}}. {{lorem.words}}? ")
@@ -111,7 +112,7 @@ const seedQuestion = async (count) => {
                 })
                 await newQuestion.addChoice(newChoice);
             }
-            await newQuestion.setClassroom(await models.Classroom.findByPk(i));
+            await newQuestion.setClassroom(await exam.getClassroom());
             await exam.addQuestion(newQuestion);
         }
     }
@@ -143,5 +144,5 @@ module.exports = async () => {
     await seedClassroom(count);
     await seedExam(count);
     await seedQuestion(count);
-    await seedAnsweredQuestion(count);
+    // await seedAnsweredQuestion(count);
 }

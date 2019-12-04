@@ -16,7 +16,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 
 import { NavLink } from "react-router-dom";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem.js";
 import ExpansionPanel from "components/ExpansionPanel/ExpansionPanel.js";
@@ -129,6 +129,7 @@ export default connect(
 )(function Exercises(props) {
   const classes = useStyles();
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const [classroomData, setClassroomData] = React.useState(null);
   const [exDialogOpen, setExDialogOpen] = React.useState(false);
   const [exIndex, setExIndex] = React.useState(null);
@@ -144,12 +145,14 @@ export default connect(
   }, []);
 
   const loadClassroom = async () => {
+    setIsLoading(true);
     const url = `/classroom/${props.match.params.id}/examAllInfo`;
     const classroomData = await axios.get(url)
       .then(res => {
         return res.data.classroomData;
       })
     setClassroomData(classroomData);
+    setIsLoading(false);
     // console.log(classroomData);
   };
 
@@ -173,8 +176,22 @@ export default connect(
   };
 
   const handleConfirmDialogClickOpen = (examIndex) => {
-    setExIndex(examIndex);
-    setConfirmDialog(true);
+    if (new Date(classroomData.Exams[examIndex].end_time) < Date.now()) {
+      props.enqueueSnackbar({
+        message: "Deadline passed! Unable to take this exam anymore!",
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: 'error',
+          autoHideDuration: 2000,
+          action: key => (
+            <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+          ),
+        }
+      });
+    } else {
+      setExIndex(examIndex);
+      setConfirmDialog(true);
+    }
   };
 
   const handleConfirmDialogBtnOk = () => {
@@ -190,7 +207,20 @@ export default connect(
     setConfirmDialog(false);
   };
 
-  const onSubmitExam = () => {
+  const onSubmitExam = (isForced) => {
+    setIsLoading(true);
+    let msg = "Submitting Exam!";
+        props.enqueueSnackbar({
+          message: msg,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: 'warning',
+            autoHideDuration: 3000,
+            action: key => (
+              <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+            ),
+          }
+        });
     let answerData = [];
     for (let i = 0; i < userChoices.length; i++) {
       let ans = userChoices[i].split('-');
@@ -232,10 +262,14 @@ export default connect(
             ),
           }
         });
+        setIsLoading(false);
         clearExam();
+        return null;
+      })
+      .then(() => {
+        props.history.push(props.history.location.pathname);
       })
   }
-
   const clearExam = () => {
     handleClose();
     setExamStartTime(null);
@@ -372,24 +406,7 @@ export default connect(
                 Exercises
               </Button>
             </NavLink>
-            <NavLink
-              exact
-              to={"/stu/classrooms/" + props.match.params.id + "/all/"}
-              activeClassName={classes.activelink}
-            >
-              <Button color="primary" className={classes.title}>
-                People
-              </Button>
-            </NavLink>
-            <NavLink
-              exact
-              to={"/stu/classrooms/" + props.match.params.id + "/gr/"}
-              activeClassName={classes.activelink}
-            >
-              <Button color="primary" className={classes.title}>
-                Grades
-              </Button>
-            </NavLink>
+            { isLoading ? <CircularProgress /> : null}
           </GridItem>
         </GridContainer>
         {/* <GridContainer justify="center">
@@ -441,7 +458,13 @@ export default connect(
             duration={exData.duration}
             open={exDialogOpen}
             handleClose={handleClose}
-            submitBtn={<Button color="inherit" onClick={onSubmitExam}>SUBMIT</Button>}
+            submitExam={() => onSubmitExam(true)} // forced
+            submitBtn={
+              <>
+                { isLoading ? <CircularProgress /> : false }  
+                <Button color="inherit" onClick={() => onSubmitExam(false)}>SUBMIT</Button>
+              </>
+            }
           >
             <div style={{ paddingTop: "2.8rem" }}>
               {classroomData != null ? examDialog() : null}

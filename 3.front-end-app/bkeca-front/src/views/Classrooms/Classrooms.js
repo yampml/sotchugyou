@@ -31,6 +31,7 @@ import { user_instance as axios } from '../../apiCaller';
 // redux
 import { connect } from "react-redux";
 import * as actions from "store/actions/actionIndexes";
+import { CircularProgress } from "@material-ui/core";
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345
@@ -88,18 +89,21 @@ export default connect(
   // eslint-disable-next-line no-unused-vars
   const [perPage, setPerPage] = React.useState(2);
   const [currentPage, setCurrentPage] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
   // const [selectedClassroom, setSelectedClassroom] = React.useState(null);
   useEffect(() => {
     loadClassrooms();
   }, []);
 
   const loadClassrooms = async () => {
+    setIsLoading(true);
     const url = "/user/" + props.currentUser + "/classrooms";
     const classroomsData = await axios.get(url)
       .then(res => {
         return res.data.classrooms;
       })
       setClassrooms(classroomsData);
+      setIsLoading(false);
   };
 
   const handlePageClick = selected => {
@@ -116,6 +120,7 @@ export default connect(
   const currentUser = props.currentUser;
   return (
     <>
+      { isLoading ? <CircularProgress /> : null}
       <Switch>
         {props.childLink.map((prop, key) => {
           return (

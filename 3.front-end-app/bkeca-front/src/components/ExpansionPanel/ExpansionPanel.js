@@ -79,9 +79,16 @@ export default function DetailedExpansionPanel(props) {
             </Typography>
           </div>
           <div className={clsx(classes.columnMain, classes.helper)}>
-            <Typography className={classes.secondaryHeading}>
-              {`Deadline: ${new Date(props.examData.end_time).toDateString()}  `}
-            </Typography>
+            {
+              new Date(props.examData.end_time).getTime() > Date.now() ? 
+                <p className={classes.secondaryHeading}>
+                  {`Deadline: ${new Date(props.examData.end_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}  `}
+                </p> 
+                :
+                <p className={classes.secondaryHeading} style={{ "color": "red" }}>
+                  {`Deadline: ${new Date(props.examData.end_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}  `}
+                </p>
+            }
             {props.examTakenChip()}
           </div>
         </ExpansionPanelSummary>

@@ -122,24 +122,6 @@ export default function People(props) {
                 Exercises
               </Button>
             </NavLink>
-            <NavLink
-              exact
-              to={"/stu/classrooms/" + props.match.params.id + "/all/"}
-              activeClassName={classes.activelink}
-            >
-              <Button color="primary" className={classes.title}>
-                People
-              </Button>
-            </NavLink>
-            <NavLink
-              exact
-              to={"/stu/classrooms/" + props.match.params.id + "/gr/"}
-              activeClassName={classes.activelink}
-            >
-              <Button color="primary" className={classes.title}>
-                Grades
-              </Button>
-            </NavLink>
           </GridItem>
         </GridContainer>
         <GridContainer justify="center">

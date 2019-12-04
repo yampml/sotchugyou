@@ -49,5 +49,7 @@ router.get('/user/:user_id/allTakenExams', classroomController.allTakenExam);
 // GET /api/user/:user_id/classrooms
 router.get('/user/:user_id/classrooms', classroomController.getClassroomsbyUser);
 
+// GET /api/user/:user_id/exam/:exam_id/result
+router.get('/user/:user_id/exam/:exam_id/getStudentExamResult', classroomController.getStudentExamResult);
 
 module.exports = router;

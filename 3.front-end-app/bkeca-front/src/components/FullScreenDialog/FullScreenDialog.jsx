@@ -34,16 +34,23 @@ export default function FullScreenDialog(props) {
 
 
   const [timeLeft, setTimeLeft] = React.useState(props.duration * 60);
+  const submit = props.submitExam;
 
   React.useEffect(() => {
     const timeLeftInterval = setInterval(() => {
       setTimeLeft(timeLeft - 1);
+      if(timeLeft === 0) {
+        submit();
+      }
     }, 1000);
+
     return () => clearInterval(timeLeftInterval);
-  }, [timeLeft]);
+  }, [timeLeft, submit]);
+
 
   const timeLeftFormat = () => {
-    return `${Number.parseInt(timeLeft/60)}:${timeLeft%60}`;
+    if(timeLeft > 0) return `${Number.parseInt(timeLeft/60)}:${timeLeft%60}`;
+    else return "00:00";
   }
   
   return (

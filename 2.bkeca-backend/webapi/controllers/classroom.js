@@ -111,7 +111,6 @@ exports.getClassroomExams = (req, res, next) => {
       return classroom.getExams();
     })
     .then(exams => {
-      console.log(exams);
       res.status(200).json({ message: 'Classroom\'s exam fetched', exams: exams });
     })
     .catch(err => {
@@ -135,7 +134,6 @@ exports.getExamQuestions = (req, res, next) => {
       return exam.getQuestions();
     })
     .then(questions => {
-      console.log(questions);
       res.status(200).json({ message: 'Exam\'s questions fetched', questions });
     })
     .catch(err => {
@@ -159,7 +157,6 @@ exports.getQuestionChoices = (req, res, next) => {
       return question.getChoices();
     })
     .then(choices => {
-      console.log(choices);
       res.status(200).json({ message: 'Question\'s choices fetched', choices });
     })
     .catch(err => {
@@ -193,7 +190,6 @@ exports.getClassroomExamAllInfo = (req, res, next) => {
     ]
   })
     .then(classroomData => {
-      console.log(classroomData);
       if (!classroomData) {
         const error = new Error('Could not find classroom with ID ' + classroomID + '!');
         error.statusCode = 404;
@@ -215,25 +211,28 @@ exports.submitStudentExam = (req, res, next) => {
   /* 
     {"exam_id":1,"classroom_id":1,"user_id":"1","answerData":[{"question_id":1,"choice_id":3},{"question_id":2,"choice_id":6},{"question_id":3,"choice_id":10},{"question_id":4,"choice_id":null},{"question_id":5,"choice_id":19},{"question_id":6,"choice_id":null},{"question_id":7,"choice_id":null},{"question_id":8,"choice_id":null},{"question_id":9,"choice_id":null},{"question_id":10,"choice_id":null},{"question_id":11,"choice_id":null},{"question_id":12,"choice_id":null},{"question_id":13,"choice_id":null},{"question_id":14,"choice_id":null},{"question_id":15,"choice_id":null},{"question_id":16,"choice_id":null}]}
   */
- console.log(req.body)
   User.findByPk(requestData.user_id)
     .then(result => {
+      console.log(result.student_id, requestData.exam_id)
       return StudentExam.findAll({
         where: {
           student_id: result.student_id,
           exam_id: requestData.exam_id,
-          // status: 'TAKING'
+          status: 'UNTAKED'
         }
       })
     })
     .then(async result => {
+      console.log(result[0])
+
       const answerData = requestData.answerData;
-      console.log(answerData)
-      if (result[0]) {
-        await result[0].destroy()
-        await AnsweredQuestion.destroy({ where: { student_exam_id: result[0].student_exam_id } });
-      };
-      let studentExam = await StudentExam.create({ student_id: requestData.user_id, exam_id: requestData.exam_id, status: 'TAKED' });
+
+      let studentExam = result[0];
+
+      studentExam.status = 'TAKED';
+      studentExam.start_time = new Date(requestData.start_time);
+      studentExam.finish_time = new Date(requestData.finish_time);
+      await studentExam.save();
 
       for (let i = 0; i < answerData.length; i++) {
         let answeredQuestion = await AnsweredQuestion.create({ question_id: answerData[i].question_id, choice_id: answerData[i].choice_id, student_exam_id: studentExam.student_exam_id });
@@ -243,6 +242,7 @@ exports.submitStudentExam = (req, res, next) => {
     })
     .catch(err => {
       res.status(404).json({ message: 'Error!: ', err });
+      console.log(err)
     })
 }
 
@@ -250,12 +250,65 @@ exports.allTakenExam = async (req, res, next) => {
   try {
     const user_id = req.params.user_id;
     const user = await User.findByPk(user_id);
-    console.log("LOGGGGGGGGGGGGGGGG ", user.student_id);
     const studentExams = await StudentExam.findAll({ where: { student_id: user.student_id } });
-    // console.log(studentExams)
-    res.status(201).json( {studentExams} );
+    res.status(201).json({ studentExams });
 
   } catch (e) {
     res.status(404).json({ message: 'Error!: ', e });
   }
+}
+
+exports.getStudentExamResult = async (req, res, next) => {
+  const user_id = req.params.user_id;
+  const exam_id = req.params.exam_id;
+  try {
+    const user = await User.findByPk(user_id);
+    const student_id = user.student_id
+    const student_exam = await StudentExam.findAll({
+      where: {
+        student_id: student_id,
+        exam_id: exam_id,
+        // status: 'TAKEN'
+      },
+      include: [
+        {
+          model: AnsweredQuestion,
+          required: true,
+          include: [
+            {
+              model: Choice,
+              required: true,
+            }
+          ]
+        }
+      ]
+    });
+
+    const exam = await Exam.findByPk(exam_id);
+    const questions = await exam.getQuestions();
+    const fullPoint = questions.length;
+    let numberOfCorrection = 0;
+    const answers = student_exam[0].AnsweredQuestions;
+
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i].Choice.is_correct == 1) numberOfCorrection += 1;
+    }
+
+    const final_result = numberOfCorrection + "/" + fullPoint;
+    const resultData = {
+      final_result,
+      start_time: student_exam[0].start_time,
+      finish_time: student_exam[0].finish_time 
+    }
+    res.status(201).json(
+      {
+      message: "OK!", 
+      resultData
+      }
+    )
+} catch (e) {
+  res.status(404).json({ message: 'Error!: ', e })
+}
+
+
 }

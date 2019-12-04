@@ -59,8 +59,6 @@ export const auth = (email, password, isSignUp) => {
       auxios
         .post("/signin/", authData)
         .then(response => {
-          console.log("responsuuus: ", response);
-
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("expiresIn", response.data.expiresIn);
           localStorage.setItem("userId", response.data.userId);

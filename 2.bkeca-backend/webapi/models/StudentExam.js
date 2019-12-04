@@ -31,6 +31,17 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.ENUM({
         values: ['UNTAKED', 'TAKING', 'TAKED']
       }),
+      defaultValue: 'UNTAKED',
+      allowNull: true,
+      comment: "null"
+    },
+    'start_time': {
+      type: 'TIMESTAMP',
+      allowNull: true,
+      comment: "null"
+    },
+    'finish_time': {
+      type: 'TIMESTAMP',
       allowNull: true,
       comment: "null"
     }
