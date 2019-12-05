@@ -20,6 +20,7 @@ import styles from "assets/jss/material-dashboard-react/components/sidebarStyle.
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { Divider } from "@material-ui/core";
 
 
 const paddingNested = {
@@ -62,7 +63,7 @@ class Sidebar extends React.Component {
           });
           if (prop.hide) return null;
           if (prop.slash) {
-            return <div className={classes.slash} key={key}></div>;
+            return <Divider />;
           }
           if (prop.redirect) return null;
           if (prop.childLink && prop.collapse) {

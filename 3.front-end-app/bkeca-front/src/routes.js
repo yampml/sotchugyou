@@ -14,6 +14,13 @@ import FullScreenDialog from "components/FullScreenDialog/FullScreenDialog.jsx";
 
 export const studentRoutes = [
   {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: Dashboard,
+    component: DashboardPage,
+    layout: "/stu"
+  },
+  {
     path: "/classrooms", name: "Classrooms", icon: "content_paste", component: Classrooms, layout: "/stu",
     childLink: [
       { path: "/classrooms/:id/", name: "<ClassroomName>", icon: Notifications, component: Classroom, layout: "/stu", exact: true, hideSidebar: true },
@@ -23,11 +30,7 @@ export const studentRoutes = [
     ]
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/stu"
+    slash: true
   },
   {
     path: "/user",
@@ -36,10 +39,6 @@ export const studentRoutes = [
     component: UserProfile,
     layout: "/stu"
   },
-  {
-    slash: true
-  },
-  
 ];
 
 export const classroomsRoutes = [

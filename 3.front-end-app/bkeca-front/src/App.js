@@ -42,7 +42,7 @@ export default withRouter(connect(
             { !props.isAuthenticated ? <Route path="/auth" component={Auth} /> : null}
             { props.isAuthenticated ? <Route path="/stu" component={StudentPage} />: null}
             { !props.isAuthenticated ? <Redirect from="/" to="/auth" /> : null}
-            { props.isAuthenticated ? <Redirect from="/" to="/stu/classrooms" /> : null}
+            { props.isAuthenticated ? <Redirect from="/" to="/stu/dashboard" /> : null}
         </Switch>
     </SnackbarProvider>
 

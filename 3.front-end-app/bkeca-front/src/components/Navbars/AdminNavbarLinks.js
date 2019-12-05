@@ -111,7 +111,7 @@ export default connect(
           className={classes.buttonLink}
         >
           <Notifications className={classes.icons} />
-          <span className={classes.notifications}>{notifications.length}</span>
+          <span className={classes.notifications}>{notifications.filter(c => c.isRead === false).length}</span>
           <Hidden mdUp implementation="css">
             <p onClick={handleCloseNotification} className={classes.linkText}>
               Notification
