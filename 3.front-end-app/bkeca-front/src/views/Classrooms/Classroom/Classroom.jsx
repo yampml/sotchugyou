@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import { createMuiTheme, withStyles, makeStyles } from '@material-ui/core/styles';
 // core components
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -21,12 +21,15 @@ import { NavLink } from "react-router-dom";
 import GridContainer from "components/Grid/GridContainer";
 import classroomsImg from "assets/img/cover.jpeg";
 import GridItem from "components/Grid/GridItem.js";
-import ReactPaginate from "react-paginate";
 
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { user_instance as axios } from '../../../apiCaller';
+
+import { blue, purple } from '@material-ui/core/colors';
+import { ThemeProvider } from "@material-ui/styles";
+
 
 const useStyles = makeStyles(theme => ({
   paperRoot: {
@@ -79,7 +82,7 @@ const useStyles = makeStyles(theme => ({
     border: "none"
   },
   activelink: {
-    color: "#2196f3",
+    color: "#ffffff",
     fontWeight: "bold"
   },
   title: {
@@ -98,6 +101,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+});
+
 export default function Classroom(props) {
   const classes = useStyles();
 
@@ -112,7 +121,7 @@ export default function Classroom(props) {
       .then(res => {
         return res.data.classroom;
       })
-      setClassroom(classroomData);
+    setClassroom(classroomData);
   };
 
   return (
@@ -125,9 +134,11 @@ export default function Classroom(props) {
               to={"/stu/classrooms/" + props.match.params.id}
               activeClassName={classes.activelink}
             >
-              <Button color="primary" className={[classes.title].join(" ")}>
-                Timeline
-              </Button>
+              <ThemeProvider theme={theme}>
+                <Button variant="contained" color="primary" className={[classes.title, classes.margin].join(" ")}>
+                  Timeline
+                </Button>
+              </ThemeProvider>
             </NavLink>
             <NavLink
               exact
@@ -148,7 +159,7 @@ export default function Classroom(props) {
               </CardActionArea>
               <CardActions>
                 <Button size="small" color="primary">
-                  {"" + (classroom == null ? null : classroom.name) }
+                  {"" + (classroom == null ? null : classroom.name)}
                 </Button>
                 <Button size="small" color="primary">
                   {"<Instructor Name Here"}

@@ -26,9 +26,16 @@ import AlertDialogSlide from "components/AlertDialogSlide/AlertDialogSlide";
 import CancelIcon from '@material-ui/icons/Cancel';
 import { user_instance as axios } from '../../../apiCaller';
 import Chip from "@material-ui/core/Chip";
+import { blue, purple } from '@material-ui/core/colors';
+import { ThemeProvider } from "@material-ui/styles";
 // redux
 import { connect } from "react-redux";
 import * as actions from "store/actions/actionIndexes";
+
+// pagination
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import Pagination from "material-ui-flat-pagination";
 
 const useStyles = makeStyles(theme => ({
   paperRoot: {
@@ -78,7 +85,7 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   activelink: {
-    color: "#2196f3",
+    color: "#ffffff",
     fontWeight: "bold"
   },
   fab: {
@@ -109,6 +116,12 @@ const useStyles = makeStyles(theme => ({
 //   choices: [""],
 //   ans: 0
 // };
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+});
 
 const mapStateToProps = state => {
   return {
@@ -210,17 +223,17 @@ export default connect(
   const onSubmitExam = (isForced) => {
     setIsLoading(true);
     let msg = "Submitting Exam!";
-        props.enqueueSnackbar({
-          message: msg,
-          options: {
-            key: new Date().getTime() + Math.random(),
-            variant: 'warning',
-            autoHideDuration: 3000,
-            action: key => (
-              <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
-            ),
-          }
-        });
+    props.enqueueSnackbar({
+      message: msg,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: 'warning',
+        autoHideDuration: 3000,
+        action: key => (
+          <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+        ),
+      }
+    });
     let answerData = [];
     for (let i = 0; i < userChoices.length; i++) {
       let ans = userChoices[i].split('-');
@@ -402,11 +415,13 @@ export default connect(
               to={"/stu/classrooms/" + props.match.params.id + "/ex/"}
               activeClassName={classes.activelink}
             >
-              <Button color="primary" className={classes.title}>
-                Exercises
-              </Button>
+              <ThemeProvider theme={theme}>
+                <Button variant="contained" color="primary" className={[classes.title, classes.margin].join(" ")}>
+                  Excercise
+                </Button>
+              </ThemeProvider>
             </NavLink>
-            { isLoading ? <CircularProgress /> : null}
+            {isLoading ? <CircularProgress /> : null}
           </GridItem>
         </GridContainer>
         {/* <GridContainer justify="center">
@@ -448,6 +463,17 @@ export default connect(
               handleOk={handleConfirmDialogBtnOk}
               message={"Are you sure you want to take the exam now?"}
             />
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <Pagination
+                  limit={2} // perPage
+                  offset={10} // perPage * currentPage
+                  total={50}  // exercise.length
+                  innerButtonCount={1}
+                  outerButtonCount={2}
+                  // onClick={handlePageClick}
+                />
+              </MuiThemeProvider>
           </GridItem>
         </GridContainer>
       </GridContainer>
@@ -461,7 +487,7 @@ export default connect(
             submitExam={() => onSubmitExam(true)} // forced
             submitBtn={
               <>
-                { isLoading ? <CircularProgress /> : false }  
+                {isLoading ? <CircularProgress /> : false}
                 <Button color="inherit" onClick={() => onSubmitExam(false)}>SUBMIT</Button>
               </>
             }

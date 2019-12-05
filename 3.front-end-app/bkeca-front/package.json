@@ -20,6 +20,7 @@
     "i18next": "^19.0.0",
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
+    "material-ui-flat-pagination": "^4.0.0",
     "notistack": "^0.9.6",
     "perfect-scrollbar": "1.4.0",
     "prop-types": "15.7.2",
