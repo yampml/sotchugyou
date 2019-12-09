@@ -101,9 +101,13 @@ func (t *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.initStudentTestInfos(stub)
 	} else if function == "queryStudentTestInfo" {
 		return t.queryStudentTestInfo(stub, args)
+	} else if function == "queryStudentTestInfoByEmail" {
+		return t.queryStudentTestInfoByEmail(stub, args)
+	} else if function == "queryStudentTestInfoByClassroomID" {
+		return t.queryStudentTestInfoByClassroomID(stub, args)
 	} else if function == "createStudentTestInfo" {
 		return t.createStudentTestInfo(stub, args)
-	} else if function == "createStudentTestInfo" {
+	} else if function == "deleteStudentTestInfo" {
 		return t.deleteStudentTestInfo(stub, args)
 	} else if function == "initClassroom" {
 		return t.initClassroom(stub)
@@ -229,7 +233,7 @@ func (t *SmartContract) queryStudentTestInfo(stub shim.ChaincodeStubInterface, a
 	return shim.Success(studentTestInfoAsBytes)
 }
 
-//peer chaincode invoke -n bkecacc -c '{"Args":["createStudentTestInfo","2","{\"student\":{\"student_id\":\"1\",\"username\":\"Nguyen Dinh An\",\"email\":\"nguyendinhan97@gmail.com\",\"dob\":\"08/07/1997\"},\"classroom\":{\"classroom_id\":\"1\",\"name\":\"Computing Class 1\"},\"question_responses\":[{\"question\":{\"question_id\":\"1\",\"description\":\"Why is C++ so fast?\",\"right_choice\":\"1\",\"choices\":[\"Choice 1\",\"Choice 2\",\"Choice 3\",\"Choice 4\"]},\"student_choices\":[\"1\"]},{\"question\":{\"question_id\":\"2\",\"description\":\"Why is Java so slow?\",\"right_choice\":\"1\",\"choices\":[\"Choice 1\",\"Choice 2\",\"Choice 3\",\"Choice 4\"]},\"student_choices\":[\"1\",\"1\"]}],\"mark\":\"2/2\",\"passed\":true,\"started_at\":\"0001-01-01T00:00:00Z\",\"finished_at\":\"2009-11-10T23:00:00Z\"}"]}' -C myc
+//peer chaincode invoke -n bkecacc -c '{"Args":["createStudentTestInfo","3","{\"student\":{\"student_id\":\"1\",\"username\":\"Nguyen Dinh An\",\"email\":\"nguyendinhan97@gmail.com\",\"dob\":\"08/07/1997\"},\"classroom\":{\"classroom_id\":\"1\",\"name\":\"Computing Class 1\"},\"question_responses\":[{\"question\":{\"question_id\":\"1\",\"description\":\"Why is C++ so fast?\",\"right_choice\":\"1\",\"choices\":[\"Choice 1\",\"Choice 2\",\"Choice 3\",\"Choice 4\"]},\"student_choices\":[\"1\"]},{\"question\":{\"question_id\":\"2\",\"description\":\"Why is Java so slow?\",\"right_choice\":\"1\",\"choices\":[\"Choice 1\",\"Choice 2\",\"Choice 3\",\"Choice 4\"]},\"student_choices\":[\"1\",\"1\"]}],\"mark\":\"2/2\",\"passed\":true,\"started_at\":\"0001-01-01T00:00:00Z\",\"finished_at\":\"2009-11-10T23:00:00Z\"}"]}' -C myc
 
 func (t *SmartContract) createStudentTestInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) != 2 {
@@ -244,15 +248,147 @@ func (t *SmartContract) createStudentTestInfo(stub shim.ChaincodeStubInterface, 
 	studentTestInfoAsBytes, _ := json.Marshal(studentTestInfo)
 	stub.PutState("STI"+args[0], studentTestInfoAsBytes)
 
-	// indexName := "email~usrid"
-	// emailUseridIndexKey, err := stub.CreateCompositeKey(indexName, []string{args[2], "USR" + args[0]})
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
-	// value := []byte{0x00}
-	// stub.PutState(emailUseridIndexKey, value)
+	studentEmail := studentTestInfo.Student.Email
+	fmt.Println(studentEmail)
+
+	classroomID := studentTestInfo.Classroom.ClassroomID
+	fmt.Println(classroomID)
+
+	// Composite key for email
+	indexName := "email~STIID"
+	emailSTIIDIndexKey, err := stub.CreateCompositeKey(indexName, []string{studentEmail, "STI" + args[0]})
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	value := []byte{0x00}
+	stub.PutState(emailSTIIDIndexKey, value)
+
+	// Composite key for classroom ID
+	indexName2 := "ClassroomID~STIID"
+	ClassroomIDSTIIDIndexKey, err2 := stub.CreateCompositeKey(indexName2, []string{classroomID, "STI" + args[0]})
+	if err2 != nil {
+		return shim.Error(err.Error())
+	}
+	value2 := []byte{0x00}
+	stub.PutState(ClassroomIDSTIIDIndexKey, value2)
 
 	return shim.Success(nil)
+}
+
+// peer chaincode invoke -n bkecacc -c '{"Args":["queryStudentTestInfoByEmail", "nguyendinhan97@gmail.com"]}' -C myc
+func (t *SmartContract) queryStudentTestInfoByEmail(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	email := args[0]
+	indexName := "email~STIID"
+
+	resultsIterator, err := stub.GetStateByPartialCompositeKey(indexName, []string{email})
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+	bArrayMemberAlreadyWritten := false
+
+	var i int
+	for i = 0; resultsIterator.HasNext(); i++ {
+		responseRange, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		_, compositeKeyParts, err := stub.SplitCompositeKey(responseRange.Key)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		returnedStudentTestInfoID := compositeKeyParts[1]
+
+		studentTestInfoAsBytes, _ := stub.GetState(returnedStudentTestInfoID)
+
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(returnedStudentTestInfoID)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(studentTestInfoAsBytes))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	fmt.Printf("- queryStudentTestInfoByEmail:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+
+}
+
+// peer chaincode invoke -n bkecacc -c '{"Args":["queryStudentTestInfoByEmail", "1"]}' -C myc
+func (t *SmartContract) queryStudentTestInfoByClassroomID(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	classroomID := args[0]
+	indexName := "ClassroomID~STIID"
+
+	resultsIterator, err := stub.GetStateByPartialCompositeKey(indexName, []string{classroomID})
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+	bArrayMemberAlreadyWritten := false
+
+	var i int
+	for i = 0; resultsIterator.HasNext(); i++ {
+		responseRange, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		_, compositeKeyParts, err := stub.SplitCompositeKey(responseRange.Key)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		returnedClassroomID := compositeKeyParts[1]
+
+		studentTestInfoAsBytes, _ := stub.GetState(returnedClassroomID)
+
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(returnedClassroomID)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(studentTestInfoAsBytes))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	fmt.Printf("- queryStudentTestInfoByClassroomID:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+
 }
 
 // //peer chaincode invoke -n bkecacc -c '{"Args":["updateStudentInfo", "1", "HieuFoobar", "updated@mail.com","01-01-1991"]}' -C myc
@@ -296,64 +432,6 @@ func (t *SmartContract) deleteStudentTestInfo(stub shim.ChaincodeStubInterface, 
 
 	return shim.Success(nil)
 }
-
-// // peer chaincode invoke -n bkecacc -c '{"Args":["queryUserByEmail", "ndahht@gmail.com"]}' -C myc
-// func (t *SmartContract) queryStudentByEmail(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-// 	if len(args) != 1 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 1")
-// 	}
-
-// 	email := args[0]
-// 	indexName := "email~usrid"
-
-// 	resultsIterator, err := stub.GetStateByPartialCompositeKey(indexName, []string{email})
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	defer resultsIterator.Close()
-
-// 	var buffer bytes.Buffer
-// 	buffer.WriteString("[")
-// 	bArrayMemberAlreadyWritten := false
-
-// 	var i int
-// 	for i = 0; resultsIterator.HasNext(); i++ {
-// 		responseRange, err := resultsIterator.Next()
-// 		if err != nil {
-// 			return shim.Error(err.Error())
-// 		}
-
-// 		_, compositeKeyParts, err := stub.SplitCompositeKey(responseRange.Key)
-// 		if err != nil {
-// 			return shim.Error(err.Error())
-// 		}
-
-// 		returnedStudentID := compositeKeyParts[1]
-
-// 		usrAsBytes, _ := stub.GetState(returnedStudentID)
-
-// 		// Add a comma before array members, suppress it for the first array member
-// 		if bArrayMemberAlreadyWritten == true {
-// 			buffer.WriteString(",")
-// 		}
-// 		buffer.WriteString("{\"Key\":")
-// 		buffer.WriteString("\"")
-// 		buffer.WriteString(returnedStudentID)
-// 		buffer.WriteString("\"")
-
-// 		buffer.WriteString(", \"Record\":")
-// 		// Record is a JSON object, so we write as-is
-// 		buffer.WriteString(string(usrAsBytes))
-// 		buffer.WriteString("}")
-// 		bArrayMemberAlreadyWritten = true
-// 	}
-// 	buffer.WriteString("]")
-
-// 	fmt.Printf("- queryStudentByEmail:\n%s\n", buffer.String())
-
-// 	return shim.Success(buffer.Bytes())
-
-// }
 
 // peer chaincode invoke -n bkecacc -c '{"Args":["initClassroom"]}' -C myc
 func (t *SmartContract) initClassroom(stub shim.ChaincodeStubInterface) pb.Response {
