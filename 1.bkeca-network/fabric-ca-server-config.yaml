@@ -243,10 +243,14 @@ ldap:
 # which are always stored in lower case.
 #############################################################################
 affiliations:
-   alpha:
-      - department1
-   beta:
-      - department1
+    udn:
+      - academicaffair
+      - instructor
+      - student
+    dut:
+      - academicaffair
+      - instructor
+      - student
 
 #############################################################################
 #  Signing section
@@ -311,11 +315,11 @@ csr:
      algo: ecdsa
      size: 256
    names:
-      - C: US
-        ST: "North Carolina"
-        L:
-        O: Hyperledger
-        OU: Fabric
+      - C: VN
+        ST: "Da Nang"
+        L: "Son Tra"
+        O: "The University of Da Nang"
+        OU: "University of Science and Technology"
    hosts:
      - d09fe8ba31b4
      - localhost

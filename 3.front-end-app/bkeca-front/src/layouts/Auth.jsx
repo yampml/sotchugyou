@@ -15,6 +15,15 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 // import { useSnackbar } from 'notistack';
 // redux
 import { connect } from "react-redux";
@@ -88,113 +97,168 @@ export default connect(
   const classes = useStyles();
 
 
-  const [email, setEmail] = React.useState("Jerry_Jerde91@gmail.com");
-  const [password, setPassword] = React.useState("foobarpassword");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [isSignUp, setIsSignUp] = React.useState(true);
+  const [username, setUsername] = React.useState("");
+  const [dob, setDob] = React.useState(new Date(1997, 8, 7));
+  const [role, setRole] = React.useState("student")
 
   const switchAuthModeHandler = () => {
     // rest.testReduxAuthStart();
     setIsSignUp(!isSignUp);
-    let msg = 'Switched to ' +  (isSignUp ? 'Sign Up' : 'Sign In') + ' mode!';
+    let msg = 'Switched to ' + (isSignUp ? 'Sign Up' : 'Sign In') + ' mode!';
     props.enqueueSnackbar({
       message: msg,
       options: {
         key: new Date().getTime() + Math.random(),
-                variant: isSignUp ? 'success' : 'info',
-                autoHideDuration: 1000,
-                action: key => (
-                    <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
-                ),
+        variant: isSignUp ? 'success' : 'info',
+        autoHideDuration: 1000,
+        action: key => (
+          <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+        ),
       }
     })
 
   };
 
+  const handleDateChange = date => {
+    setDob(date);
+  };
+
+  const handleRoleChange = event => {
+    setRole(event.target.value);
+  }
+  console.log(isSignUp)
   const btnLoginSubmit = () => {
-    props.onAuth(email, password, isSignUp);
+    props.onAuth({ email, password, dob, role, username }, isSignUp);
   }
   return <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
+    <CssBaseline />
+    <Grid item xs={false} sm={4} md={7} className={classes.image} />
+    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <div className={classes.paper}>
+        {isSignUp ?
+          <>
+            <Avatar className={classes.avatar}>
+              <PersonAddIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+              </Typography>
+          </>
+          :
+          <>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+              </Typography>
+          </>
+        }
+        <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={event => setEmail(event.target.value)}
+          />
           {isSignUp ?
-            <>
-              <Avatar className={classes.avatar}>
-                <PersonAddIcon />
-              </Avatar>
-                <Typography component="h1" variant="h5">
-                  Sign up
-              </Typography>
-            </>
-            :
-            <>
-              <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
-            </>
-          }
-          <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Full Name"
+              name="username"
+              autoComplete="username"
               autoFocus
-              value={email}
-              onChange={event => setEmail(event.target.value)}
-            />
+              value={username}
+              onChange={event => setUsername(event.target.value)}
+            /> : null
+          }
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+          />
+          {!isSignUp ? null :
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                fullWidth
+                inputVariant="outlined"
+                // disableToolbar
+                variant="inline"
+                format="dd/MM/yyyy"
+                margin="normal"
+                id="dob-picker"
+                label="Date of Birth"
+                value={dob}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          }
+          {!isSignUp ? null :
             <TextField
-              variant="outlined"
               margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-            />
-            {isSignUp ? null : <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />}
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={btnLoginSubmit}
+              label="Role"
+              select
+              variant="outlined"
+              value={role}
+              onChange={handleRoleChange}
+              inputProps={{ name: "role", id: "outlined-role-simple" }}
             >
-              {isSignUp ? "Sign Up" : "Sign in"}
-            </Button>
-            { props.loading ? <Grid container justify="center"><CircularProgress /></Grid> : null }
-            <Grid container>
-              <Grid item xs>
-                {isSignUp ? null : <Link href="#" variant="body2">
-                  Forgot password?
+              <MenuItem value={"student"}>Student</MenuItem>
+              <MenuItem value={"instructor"}>Instructor</MenuItem>
+            </TextField>
+          }
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={btnLoginSubmit}
+          >
+            {isSignUp ? "Sign Up" : "Sign in"}
+          </Button>
+          {props.loading ? <Grid container justify="center"><CircularProgress /></Grid> : null}
+          <Grid container>
+            <Grid item xs>
+              {isSignUp ? null : <Link href="#" variant="body2">
+                Forgot password?
                 </Link>}
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2" onClick={() => switchAuthModeHandler()}>
-                  {isSignUp ? "Switch to Sign In" : "Don't have an account? Sign Up!"}
-                </Link>
-              </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
-        </div>
-      </Grid>
+            <Grid item>
+              <Link href="#" variant="body2" onClick={() => switchAuthModeHandler()}>
+                {isSignUp ? "Switch to Sign In" : "Don't have an account? Sign Up!"}
+              </Link>
+            </Grid>
+          </Grid>
+          <Box mt={5}>
+            <Copyright />
+          </Box>
+        </form>
+      </div>
     </Grid>
+  </Grid>
 });

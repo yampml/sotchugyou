@@ -8,7 +8,15 @@
 const { FileSystemWallet, Gateway, X509WalletMixin } = require('fabric-network');
 const path = require('path');
 const ccpPath = path.resolve(__dirname, 'connection', 'connection-udn.json');
-// args { userEmail: <>, hashedPw: <>}
+/*
+ args { email: ,
+        username: ,
+        password_hash: ,
+        dob: ,
+        role: 
+    }
+
+*/
 exports.registerUser = async (args) => {
     try {
         // Create a new file system based wallet for managing identities.
@@ -17,10 +25,10 @@ exports.registerUser = async (args) => {
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
-        const userExists = await wallet.exists(args.userEmail);
+        const userExists = await wallet.exists(args.email);
         if (userExists) {
-            console.log('An identity for the user ' + args.userEmail + ' already exists in the wallet');
-            throw 'An identity for the user ' + args.userEmail + ' already exists in the wallet';
+            console.log('An identity for the user ' + args.email + ' already exists in the wallet');
+            throw 'An identity for the user ' + args.email + ' already exists in the wallet';
         }
 
         // Check to see if we've already enrolled the admin user.
@@ -40,29 +48,33 @@ exports.registerUser = async (args) => {
         const adminIdentity = gateway.getCurrentIdentity();
 
         // Register the user, enroll the user, and import the new identity into the wallet.
-        const secret = await ca.register({ affiliation: 'alpha', enrollmentID: args.userEmail, role: 'clientMaster', attrs: [
-            { name: 'isTeacher', value: 'true', ecert: true},
-            { name: 'email', value: args.userEmail, ecert: true},
-        ], enrollmentSecret: args.hashedPw }, adminIdentity);
+        const secret = await ca.register({ affiliation: `udn.${args.role}`, enrollmentID: args.email, role: 'clientMaster', attrs: [
+            { name: 'email', value: args.email, ecert: true},
+            { name: 'username', value: args.username, ecert: true},
+            { name: 'dob', value: args.dob.toString(), ecert: true},
+        ], enrollmentSecret: args.password_hash }, adminIdentity);
         // https://fabric-sdk-node.github.io/release-1.4/global.html#RegisterRequest
-        const enrollment = await ca.enroll({ enrollmentID: args.userEmail, enrollmentSecret: secret });
+        const enrollment = await ca.enroll({ enrollmentID: args.email, enrollmentSecret: secret });
         console.log("enrollment: ", enrollment);
 
         const userIdentity = X509WalletMixin.createIdentity('UdnMSP', enrollment.certificate, enrollment.key.toBytes());
         console.log('user identity: ', userIdentity)
 
-        await wallet.import(args.userEmail, userIdentity);
+        await wallet.import(args.email, userIdentity);
 
-        let msg = 'Successfully registered and enrolled admin user ' + args.userEmail + ' and imported it into the wallet';
+        let msg = 'Successfully registered and enrolled admin user ' + args.email + ' and imported it into the wallet';
         console.log(msg);
         return { 
             msg,
             userIdentity,
-            email: args.userEmail,
-            password: args.hashedPw
+            email: args.email,
+            password: args.hashedPw,
+            username: args.username,
+            dob: args.dob,
+            role: args.role
         }
     } catch (error) {
-        console.error(`Failed to register user ${args.userEmail}: ${error}`);
+        console.error(`Failed to register user ${args.email}: ${error}`);
         throw error;
     }
 }

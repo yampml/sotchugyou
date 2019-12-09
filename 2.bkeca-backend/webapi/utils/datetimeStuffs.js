@@ -61,6 +61,6 @@ const days = [
 //Date.toLocaleDateString()
 //Date.toLocaleTimeString()
 //date.getTimezoneOffset()
-// console.log(event.toLocaleString('en-GB', { timeZone: 'UTC' }));
+// console.log(event.toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }));
 // BC 47 language tag -- http://www.lingoes.net/en/translator/langcode.htm
 // IANA timezone

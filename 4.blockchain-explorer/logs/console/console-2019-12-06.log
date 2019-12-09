@@ -1,0 +1,531 @@
+false 'ssl-certs' '/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/ssl-certs'
+******* Initialization started for hyperledger fabric platform ******, { 'first-network':
+   { name: 'first-network',
+     profile: './connection-profile/first-network.json' } }
+ client_configs.name  first-network  client_configs.profile  ./connection-profile/first-network.json
+FabricUtils.createFabricClient 
+config.client.tlsEnable  true
+FabricConfig, this.config.channels  dut-channel
+An identity for the admin user: admin already exists in the wallet
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Channel genesis hash for channel [dut-channel] >> aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef
+FabricUtils.createDetachClient 
+
+
+Please open web browser to access ：http://localhost:8080/
+
+
+pid is 28887
+
+
+
+Sync process is started for the network : [first-network] and client : [first-network]
+config.client.tlsEnable  true
+FabricConfig, this.config.channels  dut-channel
+(node:29586) DeprecationWarning: grpc.load: Use the @grpc/proto-loader module with grpc.loadPackageDefinition instead
+An identity for the admin user: admin already exists in the wallet
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Channel genesis hash for channel [dut-channel] >> aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+
+
+Synchronizer pid is 29586
+
+
+saveTransaction  true
+block_row.blocknum  10
+status  true
+saveTransaction  true
+block_row.blocknum  9
+status  true
+req.body { user: 'admin', password: 'adminpw', network: 'first-network' }
+Network: first-network enableAuthentication false
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+initializeChannelFromDiscover  dut-channel
+ FabricClient.discover_results  endpoint  { host: 'orderer.bkeca.com', port: 7050 }
+
+initializeChannelFromDiscover.discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050 
+
+insertNewOrderers discoveryProtocol  grpcs  requesturl  grpcs://orderer.bkeca.com:7050
+{ Error: 2 UNKNOWN: Stream removed
+    at Object.exports.createStatusError (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/common.js:91:15)
+    at ClientDuplexStream._emitStatusIfDone (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client.js:233:26)
+    at ClientDuplexStream._receiveStatus (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client.js:211:8)
+    at Object.onReceiveStatus (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1306:15)
+    at InterceptingListener._callNext (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at /mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1123:18
+  code: 2,
+  metadata: Metadata { _internal_repr: {} },
+  details: 'Stream removed' }
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:55:48.559Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:55:48.561Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+(node:28887) [DEP0079] DeprecationWarning: Custom inspection function on Objects via .inspect() is deprecated
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:55:51.572Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:55:51.573Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+Updating the client network and other details to DB
+SyncServices.synchNetworkConfigToDB client  first-network  channel_name  dut-channel
+2019-12-06T13:55:55.776Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7050
+<<<<<<<<<<<<<<<<<<<<<<<<<< Synchronizer Error >>>>>>>>>>>>>>>>>>>>>
+TypeError: Cannot read property 'header' of null
+    at SyncServices.synchNetworkConfigToDB (/mnt/50AC0C42AC0C24D6/Sotchugyo/ProjectFolder/bkeca-network/4.blockchain-explorer/app/platform/fabric/sync/SyncService.js:76:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+<<<<<<<<<<<<<<<<<<<<<<<<<< Closing client processor >>>>>>>>>>>>>>>>>>>>>
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:56:48.563Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:56:48.563Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:56:51.567Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:56:51.567Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:57:48.557Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:57:48.558Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:57:51.562Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:57:51.563Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:58:48.582Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:58:48.582Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:58:51.586Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:58:51.586Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:59:48.561Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:59:48.562Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T13:59:51.570Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T13:59:51.570Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:00:48.572Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:00:48.572Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:00:51.577Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:00:51.578Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:01:48.598Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:01:48.599Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:01:51.607Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:01:51.607Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:02:48.562Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:02:48.562Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:02:51.569Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:02:51.570Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:03:48.557Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:03:48.558Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:03:51.565Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:03:51.565Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:04:48.558Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:04:48.559Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:04:51.566Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:04:51.567Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:05:48.552Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:05:48.553Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:05:51.557Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:05:51.558Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:06:48.554Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:06:48.555Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:06:51.561Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:06:51.561Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:07:48.558Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:07:48.559Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:07:51.564Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:07:51.565Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:08:48.559Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:08:48.560Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:08:51.567Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:08:51.567Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:09:48.558Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:09:48.558Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:09:51.564Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:09:51.565Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:10:48.570Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:10:48.579Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:10:51.585Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:10:51.587Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+ item ------------>  { chaincodename: 'bkeca',
+  channelname: 'dut-channel',
+  version: '1.0',
+  channel_genesis_hash:
+   'aa232e91fac595d553e0e8c10a58dff82438f553fd27a068ddf44bc0277fd0ef',
+  path: 'github.com/chaincode/bkeca/',
+  c: 7 }
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:11:30.797Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:11:30.804Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+initializeChannelFromDiscover  dut-channel
+2019-12-06T14:11:33.810Z - [31merror[39m: [Remote.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+2019-12-06T14:11:33.813Z - [31merror[39m: [Channel.js]: Error: Failed to connect before the deadline URL:grpcs://localhost:7051
+Received kill signal, shutting down gracefully
+<<<<<<<<<<<<<<<<<<<<<<<<<< Closing explorer  >>>>>>>>>>>>>>>>>>>>>
+Closed out connections

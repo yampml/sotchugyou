@@ -3,46 +3,59 @@ const { registerUser } = require('../blockchain/registerUser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../models/modelsIndex');
+const models = require('../models/modelsIndex');
 
-exports.signup = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
+exports.signup = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed.');
+      error.statusCode = 422;
+      error.data = errors.array();
+      throw error;
+    }
+    console.log(req.body);
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+    const dob = req.body.dob;
+    const role = req.body.role; // ["student", "instructor"]
+    const hashedPw = bcrypt.hashSync(password);
+    const registeredUserCA = await registerUser({ email, username, hashedPw, dob, role });
+
+    let priv = Buffer.from(registeredUserCA.userIdentity.privateKey, 'utf-8');
+    let cert = Buffer.from(registeredUserCA.userIdentity.certificate, 'utf-8');
+
+    const roleInstance = await models.Role.findOne({ where: { name: registeredUserCA.role } });
+
+    let usr = await models.User.create({
+      email: registeredUserCA.email,
+      username: registeredUserCA.username,
+      password_hash: hashedPw,
+      priv_key: priv,
+      cert: cert,
+      dob: dob,
+      role_id: roleInstance.role_id
+    })
+    if (role === "student") {
+      let student = await models.Student.create({});
+      await usr.setStudent(student);
+    } else if (role === "instructor") {
+      let instructor = await models.Instructor.create({});
+      await usr.setInstructor(instructor);
+    } else {
+      throw "Undefined role";
+    }
+    console.log(usr);
+    await res.status(201).json({ message: 'User created!' });
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    console.log("foobar error: ");
+    next(err);
   }
-  const email = req.body.email;
-  // const name = req.body.name;
-  const password = req.body.password;
-  bcrypt
-    .hash(password)
-    .then(hashedPw => {
-      return registerUser({ userEmail: email, hashedPw })
-    })
-    .then(result => {
-      // console.log("result: ", result)
-      let priv = Buffer.from(result.userIdentity.privateKey, 'utf-8');
-      let cert = Buffer.from(result.userIdentity.certificate, 'utf-8');
-      return User.create ({
-        email: result.email,
-        password: result.password,
-        private_key: priv,
-        cert_pem: cert
-      })
-    })
-    .then(result => {
-      // console.log(result)
-      res.status(201).json({ message: 'User created!', userId: result.id });
-    })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      console.log("foobar error: ", err);
-      next(err);
-    });
 };
 
 exports.login = (req, res, next) => {
@@ -50,7 +63,8 @@ exports.login = (req, res, next) => {
   console.log("param email: ", email);
   const password = req.body.password;
   let loadedUser;
-  User.findOne({ where: {email: email} })
+  console.log(req.body);
+  models.User.findOne({ where: { email: email } })
     .then(user => {
       if (!user) {
         const error = new Error('A user with this email could not be found.');
@@ -59,6 +73,7 @@ exports.login = (req, res, next) => {
       }
       loadedUser = user.dataValues;
       // console.log(user.dataValues)
+      console.log(password, user.dataValues)
       return bcrypt.compare(password, user.dataValues.password_hash);
     })
     .then(isEqual => {
@@ -75,7 +90,7 @@ exports.login = (req, res, next) => {
         'somesupersecretsecret',
         { expiresIn: '1h' }
       );
-      res.status(200).json({ token: token, expiresIn: new Date().getTime() + 60*60*1000, userId: loadedUser.user_id.toString() });
+      res.status(200).json({ token: token, expiresIn: new Date().getTime() + 60 * 60 * 1000, userId: loadedUser.user_id.toString() });
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -86,7 +101,7 @@ exports.login = (req, res, next) => {
 };
 
 exports.getUserStatus = (req, res, next) => {
-  User.findById(req.userId)
+  models.User.findById(req.userId)
     .then(user => {
       if (!user) {
         const error = new Error('User not found.');
@@ -105,7 +120,7 @@ exports.getUserStatus = (req, res, next) => {
 
 exports.updateUserStatus = (req, res, next) => {
   const newStatus = req.body.status;
-  User.findById(req.userId)
+  models.User.findById(req.userId)
     .then(user => {
       if (!user) {
         const error = new Error('User not found.');

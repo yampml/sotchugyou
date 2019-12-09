@@ -48,13 +48,19 @@ export const checkAuthTimeout = expirationTime => {
 };
 // postman11@gmail.cozxcm
 // foobarpassword
-export const auth = (email, password, isSignUp) => {
+export const auth = (databody, isSignUp) => {
+  console.log(databody);
+  console.log(isSignUp)
   return dispatch => {
     dispatch(authStart());
     const authData = {
-      email: email,
-      password: password
+      email: databody.email,
+      password: databody.password,
+      username: databody.username,
+      dob: databody.dob,
+      role: databody.role
     };
+    console.log(isSignUp)
     if (!isSignUp) { // sign in
       auxios
         .post("/signin/", authData)
