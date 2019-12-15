@@ -31,12 +31,12 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null"
     },
     'priv_key': {
-      type: "BLOB",
+      type: DataTypes.TEXT,
       allowNull: true,
       comment: "null"
     },
     'cert': {
-      type: "BLOB",
+      type: DataTypes.TEXT,
       allowNull: true,
       comment: "null"
     },

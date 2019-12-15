@@ -52,8 +52,8 @@ exports.getClassrooms = (req, res, next) => {
 
 exports.getClassroomsbyUser = (req, res, next) => {
   const user_id = req.params.user_id;
-  const currentPage = req.query.page || 1;
-  const perPage = 5;
+  const currentPage = req.query.page || 0;
+  const perPage = req.query.perPage || 8;
   User.findByPk(user_id)
     .then(user => {
       return user.getStudent();
@@ -62,7 +62,7 @@ exports.getClassroomsbyUser = (req, res, next) => {
       return student.getClassrooms();
     })
     .then(classrooms => {
-      let start = (currentPage - 1) * perPage;
+      let start = (currentPage) * perPage;
       let resData = classrooms.slice(start, start + perPage);
       res.status(200).json({
         message: 'Fetched classrooms successfully.',
@@ -191,7 +191,7 @@ exports.getClassroomExamAllInfo = (req, res, next) => {
   })
     .then(classroomData => {
       if (!classroomData) {
-        const error = new Error('Could not find classroom with ID ' + classroomID + '!');
+        const error = new Error('Could not fetch classroom data ' + classroomID + '!');
         error.statusCode = 404;
         throw error;
       }
@@ -298,17 +298,15 @@ exports.getStudentExamResult = async (req, res, next) => {
     const resultData = {
       final_result,
       start_time: student_exam[0].start_time,
-      finish_time: student_exam[0].finish_time 
+      finish_time: student_exam[0].finish_time
     }
     res.status(201).json(
       {
-      message: "OK!", 
-      resultData
+        message: "OK!",
+        resultData
       }
     )
-} catch (e) {
-  res.status(404).json({ message: 'Error!: ', e })
-}
-
-
+  } catch (e) {
+    res.status(404).json({ message: 'Error!: ', e })
+  }
 }

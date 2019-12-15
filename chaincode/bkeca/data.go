@@ -46,9 +46,9 @@ type ClassroomInfo struct {
 
 type QuestionInfo struct {
 	QuestionID  string   `json:"question_id"`
-	Description string   `json:"description`
-	RightChoice string   `json:'right_choice"`
-	Choices     []string `json:choices`
+	Description string   `json:"description"`
+	RightChoice string   `json:"right_choice"`
+	Choices     []string `json:"choices"`
 }
 
 type QuestionResponseInfo struct {
@@ -58,7 +58,7 @@ type QuestionResponseInfo struct {
 
 type StudentTestInfo struct {
 	Student           StudentInfo            `json:"student"`
-	Classroom         ClassroomInfo          `json:"classroom`
+	Classroom         ClassroomInfo          `json:"classroom"`
 	QuestionResponses []QuestionResponseInfo `json:"question_responses"`
 	Mark              string                 `json:"mark"`
 	Passed            bool                   `json:"passed"`

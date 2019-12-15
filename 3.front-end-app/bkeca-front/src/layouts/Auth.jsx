@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -16,19 +14,24 @@ import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from '@date-io/date-fns';
+
+import authImages from 'imagesImporter';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-
 // import { useSnackbar } from 'notistack';
 // redux
 import { connect } from "react-redux";
 import * as actions from "../store/actions/actionIndexes";
 
+
+const takeRandomImages = () => {
+  return authImages['auth-img' + (Math.floor(Math.random() * Math.floor(9)) + 1) + '.jpg'];
+}
 
 const mapStateToProps = state => {
   return {
@@ -41,7 +44,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
+    onAuth: (authData, isSignUp) => dispatch(actions.auth(authData, isSignUp)),
     onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/')),
     enqueueSnackbar: (notification) => dispatch(actions.enqueueSnackbar(notification)),
     closeSnackbar: (key) => dispatch(actions.closeSnackbar(key))
@@ -66,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh"
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: "url(" + takeRandomImages() + ")",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center"
@@ -129,7 +132,6 @@ export default connect(
   const handleRoleChange = event => {
     setRole(event.target.value);
   }
-  console.log(isSignUp)
   const btnLoginSubmit = () => {
     props.onAuth({ email, password, dob, role, username }, isSignUp);
   }

@@ -84,27 +84,30 @@ export default connect(
   const classes = useStyles();
   const [classrooms, setClassrooms] = React.useState([]);
   // eslint-disable-next-line no-unused-vars
-  const [perPage, setPerPage] = React.useState(2);
+  const [perPage, setPerPage] = React.useState(8);
   const [currentPage, setCurrentPage] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [totalClassroom, setTotalClassroom] = React.useState(0);
   // const [selectedClassroom, setSelectedClassroom] = React.useState(null);
   useEffect(() => {
     loadClassrooms();
-  }, []);
+  }, [currentPage]);
 
   const loadClassrooms = async () => {
     setIsLoading(true);
-    const url = "/user/" + props.currentUser + "/classrooms";
+    const url = `/user/${props.currentUser}/classrooms?page=${currentPage}&perPage=${perPage}`;
     const classroomsData = await axios.get(url)
       .then(res => {
+        setTotalClassroom(res.data.totalItems)
+        setClassrooms(res.data.classrooms);
         return res.data.classrooms;
       })
-    setClassrooms(classroomsData);
+    console.log(classroomsData)
     setIsLoading(false);
   };
 
   const handlePageClick = selected => {
-    setCurrentPage(selected.selected);
+    setCurrentPage(selected / perPage);
   };
 
   const currentUser = props.currentUser;
@@ -129,7 +132,7 @@ export default connect(
       {props.location.pathname === "/stu/classrooms" ? (
         <>
           <GridContainer>
-            {classrooms.slice(currentPage * perPage, currentPage * perPage + perPage).map((classroom, i) => {
+            {classrooms.map((classroom, i) => {
               return (
                 <GridItem
                   xs={12}
@@ -176,10 +179,10 @@ export default connect(
               <MuiThemeProvider theme={theme}>
                 <CssBaseline />
                 <Pagination
-                  limit={Math.floor(classrooms.length / perPage)}
+                  limit={perPage}
                   offset={currentPage * perPage}
-                  total={classrooms.length}
-                  onClick={handlePageClick}
+                  total={totalClassroom}
+                  onClick={(e, selected) => handlePageClick(selected)}
                 />
               </MuiThemeProvider>
             </GridItem>

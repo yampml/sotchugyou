@@ -153,6 +153,9 @@ export default connect(
   const [examResult, setExamResult] = React.useState(false);
   const [examStartTime, setExamStartTime] = React.useState(null);
 
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [perPage, setPerPage] = React.useState(4);
+
   React.useEffect(() => {
     loadClassroom();
   }, []);
@@ -164,9 +167,22 @@ export default connect(
       .then(res => {
         return res.data.classroomData;
       })
+      .catch(err => {
+        props.enqueueSnackbar({
+          message: (err.response.data ? err.response.data.message : "") + " Please contact admin for furthur information.",
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: 'error',
+            autoHideDuration: 2000,
+            action: key => (
+              <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+            ),
+          }
+        });
+      })
     setClassroomData(classroomData);
     setIsLoading(false);
-    // console.log(classroomData);
+    console.log(classroomData);
   };
 
   const loadExamResult = (user_id, exam_id) => {
@@ -176,6 +192,11 @@ export default connect(
       .then(result => {
         setExamResult(result.data.resultData);
       })
+  }
+
+  const handlePageClick = (selected) => {
+    console.log(selected / perPage)
+    setCurrentPage(selected / perPage)
   }
 
   const handleClose = () => {
@@ -383,10 +404,10 @@ export default connect(
         }
         >
           <Typography color="primary" variant="h6" >
-            Start Time: {examResult ? examResult.start_time : null}
+            Start Time: {examResult ? new Date(examResult.start_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })  : null}
           </Typography>
           <Typography color="primary" variant="h6" >
-            End Time: {examResult ? examResult.finish_time : null}
+            End Time: {examResult ? new Date(examResult.finish_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) : null}
           </Typography>
           <Typography color="secondary" variant="h6" >
             Result: {examResult ? examResult.final_result : null}
@@ -442,7 +463,7 @@ export default connect(
           <GridItem xs={12} sm={12} md={8}>
             {
               classroomData != null ?
-                classroomData.Exams.map((exam, index) => {
+                classroomData.Exams.slice(currentPage * perPage, currentPage * perPage + perPage > classroomData.Exams.length ? classroomData.Exams.length : currentPage * perPage + perPage).map((exam, index) => {
                   return (
                     <ExpansionPanel
                       isDone={isExamDone(exam)}
@@ -466,12 +487,12 @@ export default connect(
             <MuiThemeProvider theme={theme}>
                 <CssBaseline />
                 <Pagination
-                  limit={2} // perPage
-                  offset={10} // perPage * currentPage
-                  total={50}  // exercise.length
+                  limit={perPage} // perPage
+                  offset={perPage * currentPage} // perPage * currentPage
+                  total={classroomData ? classroomData.Exams.length : 1 }  // exercise.length
                   innerButtonCount={1}
                   outerButtonCount={2}
-                  // onClick={handlePageClick}
+                  onClick={(e, offset) => handlePageClick(offset)}
                 />
               </MuiThemeProvider>
           </GridItem>

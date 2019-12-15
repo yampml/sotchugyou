@@ -106,7 +106,7 @@ peer chaincode instantiate -o orderer.bkeca.com:7050 \
 # 10.3 Try Query & Invoke
 # Can change env to any joined peer to run
 
-peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+peer chaincode query -C $CHANNEL_NAME -n bkeca -c '{"Args":["queryStudentTestInfoByEmail", "nguyendinhan97@gmail.com"]}'
 
 # Invoke
 peer chaincode invoke -o orderer.bkeca.com:7050 \
@@ -120,7 +120,7 @@ peer chaincode invoke -o orderer.bkeca.com:7050 \
 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/dut.bkeca.com/peers/peer0.dut.bkeca.com/tls/ca.crt \
 -c '{"Args":["invoke","a","b","10"]}'
 
-# try invoke init bkeca
+# try invoke bkeca
 peer chaincode invoke -o orderer.bkeca.com:7050 \
 --tls true \
 --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/bkeca.com/orderers/orderer.bkeca.com/msp/tlscacerts/tlsca.bkeca.com-cert.pem \
@@ -130,7 +130,21 @@ peer chaincode invoke -o orderer.bkeca.com:7050 \
 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/udn.bkeca.com/peers/peer0.udn.bkeca.com/tls/ca.crt \
 --peerAddresses peer0.dut.bkeca.com:9051 \
 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/dut.bkeca.com/peers/peer0.dut.bkeca.com/tls/ca.crt \
--c '{"Args":["initUser"]}'
+-c '{"Args":["initStudent"]}'
+
+# try upgrade chaincode
+# first install new chaincode (on both 2 ORGs by change env!!!)
+peer chaincode install -n bkeca -v 2.0 -p github.com/chaincode/bkeca/
+
+# then upgrade!
+peer chaincode upgrade -o orderer.bkeca.com:7050 \
+--tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/bkeca.com/orderers/orderer.bkeca.com/msp/tlscacerts/tlsca.bkeca.com-cert.pem \
+-C $CHANNEL_NAME \
+-n bkeca \
+-v 2.0 \
+-c '{"Args":[]}' \
+-P "AND ('UdnMSP.peer','DutMSP.peer')"
+
 
 ###
 {"Args":["queryUserByEmail", "Prius@gmail.com"]}

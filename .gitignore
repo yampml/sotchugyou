@@ -85,3 +85,5 @@ sketch
 
 bin/
 wallet/
+
+4.blockchain-explorer/logs/*

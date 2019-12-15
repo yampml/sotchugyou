@@ -2,6 +2,7 @@ import * as actionTypes from "./actionTypes";
 import { auth_instance as auxios, user_instance as userxios } from "../../apiCaller";
 import * as actions from "./actionIndexes";
 
+
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START
@@ -49,8 +50,8 @@ export const checkAuthTimeout = expirationTime => {
 // postman11@gmail.cozxcm
 // foobarpassword
 export const auth = (databody, isSignUp) => {
-  console.log(databody);
-  console.log(isSignUp)
+  // console.log(databody);
+  // console.log(isSignUp)
   return dispatch => {
     dispatch(authStart());
     const authData = {
@@ -60,11 +61,12 @@ export const auth = (databody, isSignUp) => {
       dob: databody.dob,
       role: databody.role
     };
-    console.log(isSignUp)
+    console.log("IN AUTH ACTION: ", authData);
     if (!isSignUp) { // sign in
       auxios
         .post("/signin/", authData)
         .then(response => {
+          console.log("RESPONSEE IN LOGIN: ", response);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("expiresIn", response.data.expiresIn);
           localStorage.setItem("userId", response.data.userId);
@@ -73,15 +75,24 @@ export const auth = (databody, isSignUp) => {
             message: "Login successfully, redirecting...!",
             options: {
               key: new Date().getTime() + Math.random(),
-                      variant: 'success',
-                      autoHideDuration: 1000,
+              variant: 'success',
+              autoHideDuration: 1000,
             }
-        }));
+          }));
           dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(err => {
-          console.log(err);
-          dispatch(authFail(err.response.data.error));
+          const errorMessage = err.response.data ? err.response.data.message : "";
+          dispatch(actions.enqueueSnackbar({
+            message: errorMessage,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+              autoHideDuration: 1000,
+            }
+          }));
+          dispatch(authFail(errorMessage));
+
         });
     } else {
       auxios // sign up
@@ -90,37 +101,23 @@ export const auth = (databody, isSignUp) => {
           console.log("Auxios response: ", response);
           dispatch(registerSuccess());
           dispatch(actions.enqueueSnackbar({
-              message: "Account registered successfully, please login!",
-              options: {
-                key: new Date().getTime() + Math.random(),
-                        variant: 'success',
-                        autoHideDuration: 1000,
-              }
+            message: "Account registered successfully, please switch to login!",
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'success',
+              autoHideDuration: 1000,
+            }
           }))
-          // const expirationDate = new Date(
-            // new Date().getTime() + response.data.expiresIn * 1000
-          // );
-          // localStorage.setItem("token", response.data.idToken);
-          // localStorage.setItem("expirationDate", expirationDate);
-          // localStorage.setItem("userId", response.data.localId);
-          // auxios
-          //   .put("https://react-my-burger-112af.firebaseio.com/users.json", {
-          //     id: response.data.localId,
-          //     role: "admin"
-          //   })
-          //   .then(response2 => {
-          //     console.log(response2.data);
-          //   })
-          //   .catch(error2 => {
-          //     console.log(error2);
-          //     console.log("not error not error");
-          //   });
-
-          // dispatch(authSuccess(response.data.idToken, response.data.localId));
-          // dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(err => {
-          console.log(err);
+          dispatch(actions.enqueueSnackbar({
+            message: err.response.data.message,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: 'error',
+              autoHideDuration: 1000,
+            }
+          }))
           dispatch(authFail(err.response.data.error));
         });
     }
@@ -166,11 +163,13 @@ export const fetchCurrentUser = (userID, token) => {
           Authorization: 'Bearer ' + token
         }
       })
-      .then( async result => {
+      .then(async result => {
         const userTakenExam = await userxios.get(url + "/allTakenExams");
         const studentExams = userTakenExam.data.studentExams;
-        const { user_id, username, email, created_at, private_key, cert_pem }  = result.data.user;
-        dispatch(setCurrentUser( { user_id, username, email, created_at, private_key, cert_pem, studentExams } ));
+        // console.log(result.data.user)
+        const { user_id, username, email, created_at, priv_key, cert } = result.data.user;
+
+        dispatch(setCurrentUser({ user_id, username, email, created_at, priv_key, cert, studentExams }));
       })
   }
 }
@@ -178,6 +177,6 @@ export const fetchCurrentUser = (userID, token) => {
 export const setCurrentUser = (user) => {
   return {
     type: actionTypes.SET_CURRENT_USER,
-    currentUser: { ...user}
+    currentUser: { ...user }
   }
 }

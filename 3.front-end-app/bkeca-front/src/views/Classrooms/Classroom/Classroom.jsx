@@ -172,18 +172,17 @@ export default function Classroom(props) {
           <GridItem xs={12} sm={12} md={2}>
             <Paper className={classes.paperRoot}>
               <Typography variant="h5" component="h3">
-                This is a sheet of paper.
+                No announcement available.
               </Typography>
               <Typography component="p">
-                Paper can be used to build surface or other elements for your
-                application.
+                
               </Typography>
             </Paper>
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <CardHeader title="Đăng tin mới cmn" />
+                <CardHeader title="Đăng tin mới" />
                 <CardContent>
                   <CKEditor
                     editor={ClassicEditor}
@@ -208,16 +207,16 @@ export default function Classroom(props) {
             </GridItem>
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <CardHeader title="Tin mới cmn" />
+                <CardHeader title="Hạn cuối bài tập giữa học kỳ" />
                 <CardContent>
-                  <Typography>Messi sut sml Ronaldo</Typography>
+                  <Typography>Bài tập cuối kì nộp thành 2 bản vào 2 ngày trước khi thi cuối kì</Typography>
                 </CardContent>
                 <hr className={classes.greyHr}></hr>
                 <CardActions>
                   <TextField
                     id="standard-basic"
                     className={classes.textField}
-                    label="Comment something di dude"
+                    label="Comment something"
                     margin="normal"
                   />
                   <Button size="small" color="primary">

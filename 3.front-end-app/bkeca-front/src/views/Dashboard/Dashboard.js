@@ -3,12 +3,10 @@ import React from "react";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
 import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -20,7 +18,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website } from "variables/general.js";
+import { bugs } from "variables/general.js";
 
 import {
   dailySalesChart,

@@ -68,22 +68,22 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
-
 sequelize
   .query('SET FOREIGN_KEY_CHECKS = 0')
   .then(() => {
     return sequelize.sync()
     return sequelize.sync({ force: true }) 
   })
-  // .then(() => {
-  //   return seeds();
-  // })
+  .then(() => {
+    app.listen(6969);
+    return seeds();
+  })
   .then(() => {
     return sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
   })
-  .then(_ => {
-    app.listen(6969);
-  })
+  // .then(_ => {
+  //   app.listen(6969);
+  // })
   .catch(err => {
     console.log(err);
   });

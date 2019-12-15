@@ -63,7 +63,7 @@ class Sidebar extends React.Component {
           });
           if (prop.hide) return null;
           if (prop.slash) {
-            return <Divider />;
+            return <Divider key={"Divider"+key}/>;
           }
           if (prop.redirect) return null;
           if (prop.childLink && prop.collapse) {

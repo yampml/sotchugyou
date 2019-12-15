@@ -48,22 +48,21 @@ exports.registerUser = async (args) => {
         const adminIdentity = gateway.getCurrentIdentity();
 
         // Register the user, enroll the user, and import the new identity into the wallet.
-        const secret = await ca.register({ affiliation: `udn.${args.role}`, enrollmentID: args.email, role: 'clientMaster', attrs: [
+        const secret = await ca.register({ affiliation: `udn.${args.role}`, enrollmentID: args.email, role: 'client', attrs: [
             { name: 'email', value: args.email, ecert: true},
             { name: 'username', value: args.username, ecert: true},
             { name: 'dob', value: args.dob.toString(), ecert: true},
         ], enrollmentSecret: args.password_hash }, adminIdentity);
         // https://fabric-sdk-node.github.io/release-1.4/global.html#RegisterRequest
         const enrollment = await ca.enroll({ enrollmentID: args.email, enrollmentSecret: secret });
-        console.log("enrollment: ", enrollment);
 
         const userIdentity = X509WalletMixin.createIdentity('UdnMSP', enrollment.certificate, enrollment.key.toBytes());
-        console.log('user identity: ', userIdentity)
 
         await wallet.import(args.email, userIdentity);
 
         let msg = 'Successfully registered and enrolled admin user ' + args.email + ' and imported it into the wallet';
         console.log(msg);
+        console.log(userIdentity);
         return { 
             msg,
             userIdentity,
