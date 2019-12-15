@@ -70,7 +70,7 @@ peer channel update -o orderer.bkeca.com:7050 -c $CHANNEL_NAME -f ./channel-arti
 # for node chaincode -p takes the absolute path to the node.js chaincode
 
 # !!Change envs (at #6 & #8), do installation 4 times!!
-peer chaincode install -n mycc -v 1.0 -l node -p /opt/gopath/src/github.com/chaincode/chaincode_example02/node/
+peer chaincode install -n mycc -v 2.0 -l node -p /opt/gopath/src/github.com/chaincode/chaincode_example02/node/
 
 # BKECA~~~~~~~~~~~~~~~~~~~~~~
 peer chaincode install -n bkeca -v 1.0 -p github.com/chaincode/bkeca/

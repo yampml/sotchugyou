@@ -14,7 +14,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-
+import TextField from '@material-ui/core/TextField';
 import { NavLink } from "react-router-dom";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import GridContainer from "components/Grid/GridContainer";
@@ -36,6 +36,7 @@ import * as actions from "store/actions/actionIndexes";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Pagination from "material-ui-flat-pagination";
+import FormDialog from "components/FormDialog/FormDialog";
 
 const useStyles = makeStyles(theme => ({
   paperRoot: {
@@ -155,6 +156,67 @@ export default connect(
 
   const [currentPage, setCurrentPage] = React.useState(0);
   const [perPage, setPerPage] = React.useState(4);
+
+  const [passwordDialog, setPasswordDialog] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  }
+
+  const handlePasswordDialogClose = () => {
+    setPasswordDialog(false);
+  }
+
+  const handlePasswordDialogOpen = (examIndex) => {
+    setPasswordDialog(true);
+    setExIndex(examIndex);
+    setExData(classroomData.Exams[examIndex]);
+  }
+
+  const handleSendToBlockchain = async () => {
+    setIsLoading(true);
+    const responseCheckPwd = await axios.post(`/user/${props.currentUser.user_id}/checkUserPassword`, {
+      pwd: password
+    });
+
+    console.log(responseCheckPwd.data.isEqual)
+    if (responseCheckPwd.data.isEqual) {
+      const responseSendToBLC = await axios.post(`/user/${props.currentUser.user_id}/exam/${classroomData.Exams[exIndex].exam_id}/sendExamResultToBlockchain`, {
+        cert: props.currentUser.cert,
+        priv_key: props.currentUser.priv_key,
+        pwd: password
+      });
+
+      console.log(responseSendToBLC);
+      // if(responseSendToBLC.data.)
+
+      handlePasswordDialogClose();
+      clearExam();
+    } else {
+      props.enqueueSnackbar({
+        message: "Something happened! Password is not truth!",
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: 'error',
+          autoHideDuration: 2000,
+          action: key => (
+            <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+          ),
+        }
+      });
+
+    }
+    // console.log(exData);
+    // console.log(examResult);
+    // handleConfirmDialogClickClose();
+    // setExData(classroomData.Exams[exIndex])
+    // let newUserChoices = Array(classroomData.Exams[exIndex].Questions.length).fill(`question-${null}-choice-${null}`);
+    // setUserChoices(newUserChoices);
+    // setExamStartTime(Date.now())
+    // setExDialogOpen(true);
+    setIsLoading(false);
+  }
 
   React.useEffect(() => {
     loadClassroom();
@@ -306,6 +368,7 @@ export default connect(
   }
   const clearExam = () => {
     handleClose();
+    setPassword("");
     setExamStartTime(null);
     setExData(null);
     setUserChoices(null);
@@ -404,7 +467,7 @@ export default connect(
         }
         >
           <Typography color="primary" variant="h6" >
-            Start Time: {examResult ? new Date(examResult.start_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })  : null}
+            Start Time: {examResult ? new Date(examResult.start_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) : null}
           </Typography>
           <Typography color="primary" variant="h6" >
             End Time: {examResult ? new Date(examResult.finish_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) : null}
@@ -469,6 +532,7 @@ export default connect(
                       isDone={isExamDone(exam)}
                       onOpenResult={() => onOpenResult(index)}
                       onTakeExam={() => handleConfirmDialogClickOpen(index)}
+                      onSendToBlockchain={() => handlePasswordDialogOpen(index)}
                       examData={exam}
                       key={"exam-" + index}
                       examTakenChip={() => takenChip(exam)}
@@ -484,17 +548,36 @@ export default connect(
               handleOk={handleConfirmDialogBtnOk}
               message={"Are you sure you want to take the exam now?"}
             />
+            <FormDialog
+              open={passwordDialog}
+              handleClose={handlePasswordDialogClose}
+              handleOk={handleSendToBlockchain}
+              title="SEND EXAM RESULT TO BLOCKCHAIN"
+              content="Input your password"
+            >
+              <TextField
+                autoFocus
+                margin="dense"
+                id="password"
+                label="Password"
+                fullWidth
+                type="password"
+                value={password}
+                onChange={(event) => handlePasswordChange(event)}
+              />
+            </FormDialog>
+
             <MuiThemeProvider theme={theme}>
-                <CssBaseline />
-                <Pagination
-                  limit={perPage} // perPage
-                  offset={perPage * currentPage} // perPage * currentPage
-                  total={classroomData ? classroomData.Exams.length : 1 }  // exercise.length
-                  innerButtonCount={1}
-                  outerButtonCount={2}
-                  onClick={(e, offset) => handlePageClick(offset)}
-                />
-              </MuiThemeProvider>
+              <CssBaseline />
+              <Pagination
+                limit={perPage} // perPage
+                offset={perPage * currentPage} // perPage * currentPage
+                total={classroomData ? classroomData.Exams.length : 1}  // exercise.length
+                innerButtonCount={1}
+                outerButtonCount={2}
+                onClick={(e, offset) => handlePageClick(offset)}
+              />
+            </MuiThemeProvider>
           </GridItem>
         </GridContainer>
       </GridContainer>

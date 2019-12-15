@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { validationResult } = require('express-validator/check');
-
+const bcrypt = require('bcryptjs');
 const { User } = require('../models/modelsIndex');
 const jwt = require('jsonwebtoken');
 
@@ -68,6 +68,34 @@ exports.getUser = (req, res, next) => {
       next(err);
     });
 };
+
+exports.checkUserPassword = (req, res, next) => {
+  const userID = req.params.userID;
+  const pwd = req.body.pwd;
+  User.findByPk(userID)
+    .then(user => {
+      if (!user) {
+        const error = new Error('Could not find user.');
+        error.statusCode = 404;
+        throw error;
+      }
+      loadedUser = user.dataValues;
+      return bcrypt.compare(pwd, user.dataValues.password_hash);
+    })
+    .then(isEqual => {
+      if (!isEqual) {
+        res.status(200).json({ isEqual: false });
+      } else {
+        res.status(200).json({ isEqual: true });
+      }
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+}
 
 
 exports.updateUser = (req, res, next) => {

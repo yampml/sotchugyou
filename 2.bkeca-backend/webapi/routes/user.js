@@ -12,6 +12,9 @@ router.get('/users', isAuth, userController.getUsers);
 // GET /api/user/:id
 router.get('/user/:userID', userController.getUser);
 
+// GET /api/user/:id/checkUserPassword
+router.post('/user/:userID/checkUserPassword', userController.checkUserPassword);
+
 // PUT /api/user/:id
 router.put(
   '/user/:userID',

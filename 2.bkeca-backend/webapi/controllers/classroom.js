@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { validationResult } = require('express-validator/check');
+const { invoke } = require('./../blockchain/invoke.js');
 
 const { Classroom, Exam, Question, Choice, StudentExam, AnsweredQuestion, User, Student } = require('../models/modelsIndex');
 const jwt = require('jsonwebtoken');
@@ -224,20 +225,15 @@ exports.submitStudentExam = (req, res, next) => {
     })
     .then(async result => {
       console.log(result[0])
-
       const answerData = requestData.answerData;
-
       let studentExam = result[0];
-
       studentExam.status = 'TAKED';
       studentExam.start_time = new Date(requestData.start_time);
       studentExam.finish_time = new Date(requestData.finish_time);
       await studentExam.save();
-
       for (let i = 0; i < answerData.length; i++) {
         let answeredQuestion = await AnsweredQuestion.create({ question_id: answerData[i].question_id, choice_id: answerData[i].choice_id, student_exam_id: studentExam.student_exam_id });
       }
-
       res.status(200).json({ message: 'Student Exam submitted successfully' });
     })
     .catch(err => {
@@ -307,6 +303,95 @@ exports.getStudentExamResult = async (req, res, next) => {
       }
     )
   } catch (e) {
+    res.status(404).json({ message: 'Error!: ', e })
+  }
+}
+
+exports.sendExamResultToBlockchain = async (req, res, next) => {
+  const user_id = req.params.user_id;
+  const exam_id = req.params.exam_id;
+  try {
+    const user = await User.findByPk(user_id);
+    const student_id = user.student_id
+    const student_exam = await StudentExam.findAll({
+      where: {
+        student_id: student_id,
+        exam_id: exam_id,
+        // status: 'TAKEN'
+      },
+      include: [
+        {
+          model: AnsweredQuestion,
+          required: true,
+          include: [
+            {
+              model: Choice,
+              required: true,
+            }
+          ]
+        }
+      ]
+    });
+    const exam = await Exam.findByPk(exam_id);
+    const classroom = await exam.getClassroom();
+    const questions = await exam.getQuestions();
+    const fullPoint = questions.length;
+    let numberOfCorrection = 0;
+    const answers = student_exam[0].AnsweredQuestions;
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i].Choice.is_correct == 1) numberOfCorrection += 1;
+    }
+    const final_result = numberOfCorrection + "/" + fullPoint;
+
+    let blockchainData = {
+      student: {
+        student_id: student_id,
+        username: user.username,
+        email: user.email,
+        dob: new Date(user.dob).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+      },
+      classroom: {
+        classroom_id: classroom.classroom_id,
+        name: classroom.name
+      },
+      question_responses: await Promise.all(answers.map(async (a, i) => {
+        let ques = await Question.findByPk(a.question_id);
+        let choices = await ques.getChoices();
+        return {
+          question: {
+            question_id: ques.question_id,
+            description: ques.description,
+            choices: choices
+          },
+          student_choices: [a.Choice.description]
+        }
+      })),
+      mark: final_result,
+      passed: true,
+      started_at: student_exam[0].start_time,
+      finish_at: student_exam[0].finish_time
+    }
+
+    console.log(JSON.stringify(blockchainData));
+    const argsss = {
+      user: user.email,
+      encodedPriv: req.body.priv_key,
+      kusuri: req.body.pwd,
+      cert: req.body.cert,
+      channel: 'dut-channel',
+      contract: 'bkeca',
+      transactionArguments: ["createStudentTestInfo", student_exam[0].student_exam_id.toString(), JSON.stringify(blockchainData)]
+    }
+
+    await invoke(argsss);
+
+    res.status(201).json(
+      {
+        message: "OK! DONE",
+      }
+    )
+  } catch (e) {
+    console.log(e)
     res.status(404).json({ message: 'Error!: ', e })
   }
 }

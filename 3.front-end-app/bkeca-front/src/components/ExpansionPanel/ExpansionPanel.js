@@ -80,10 +80,10 @@ export default function DetailedExpansionPanel(props) {
           </div>
           <div className={clsx(classes.columnMain, classes.helper)}>
             {
-              new Date(props.examData.end_time).getTime() > Date.now() ? 
+              new Date(props.examData.end_time).getTime() > Date.now() ?
                 <p className={classes.secondaryHeading}>
                   {`Deadline: ${new Date(props.examData.end_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}  `}
-                </p> 
+                </p>
                 :
                 <p className={classes.secondaryHeading} style={{ "color": "red" }}>
                   {`Deadline: ${new Date(props.examData.end_time).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}  `}
@@ -94,10 +94,10 @@ export default function DetailedExpansionPanel(props) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <div className={classes.column}>
-            <Chip 
-              color={props.examData.status === 'OPENING' ? 'primary' : 'secondary'} 
-              variant="outlined" 
-              label={`STATUS: ${props.examData.status}`} 
+            <Chip
+              color={props.examData.status === 'OPENING' ? 'primary' : 'secondary'}
+              variant="outlined"
+              label={`STATUS: ${props.examData.status}`}
             />
           </div>
 
@@ -117,19 +117,32 @@ export default function DetailedExpansionPanel(props) {
           <div className={clsx(classes.column, classes.helper)}>
             {
               props.isDone === true ?
-              <Fab
-                color="secondary"
-                variant="extended"
-                aria-label="add"
-                // className={classes.fab}
-                onClick={props.onOpenResult}
-              >
-                <ArrowForwardIcon className={classes.extendedIcon} />
-                  View Result
-              </Fab> 
-              : null
+                <React.Fragment>
+                  <Fab
+                    color="secondary"
+                    variant="extended"
+                    aria-label="add"
+                    // className={classes.fab}
+                    onClick={props.onOpenResult}
+                  >
+                    <ArrowForwardIcon className={classes.extendedIcon} />
+                    View Result
+                  </Fab>
+                  <Fab
+                    color="secondary"
+                    variant="extended"
+                    aria-label="add"
+                    // className={classes.fab}
+                    onClick={props.onSendToBlockchain}
+                  >
+                    <ArrowForwardIcon className={classes.extendedIcon} />
+                    SEND TO BLOCKCHAIN
+                  </Fab>
+                </React.Fragment>
+
+                : null
             }
-            { (props.examData.status === 'OPENING' && props.isDone !== true) ? 
+            {(props.examData.status === 'OPENING' && props.isDone !== true) ?
               <Fab
                 color="primary"
                 variant="extended"
@@ -139,7 +152,7 @@ export default function DetailedExpansionPanel(props) {
               >
                 <ArrowForwardIcon className={classes.extendedIcon} />
                 Go to Exam!
-              </Fab> 
+              </Fab>
               : null
             }
           </div>

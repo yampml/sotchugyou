@@ -52,4 +52,7 @@ router.get('/user/:user_id/classrooms', classroomController.getClassroomsbyUser)
 // GET /api/user/:user_id/exam/:exam_id/result
 router.get('/user/:user_id/exam/:exam_id/getStudentExamResult', classroomController.getStudentExamResult);
 
+// POST /api/user/:user_id/exam/:exam_id/sendExamResultToBlockchain
+router.post('/user/:user_id/exam/:exam_id/sendExamResultToBlockchain', classroomController.sendExamResultToBlockchain);
+
 module.exports = router;

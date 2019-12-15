@@ -4,14 +4,18 @@
 
 'use strict';
 
-const { FileSystemWallet, Gateway } = require('fabric-network');
-const path = require('path');
+const { Gateway, InMemoryWallet, X509WalletMixin } = require('fabric-network');
+const { decodeAES } = require('./../utils/decodeAES.js');
 
+const path = require('path');
 const ccpPath = path.resolve(__dirname, 'connection', 'connection-udn.json');
 
 /*
     args: {
         user: string <useremail>
+        encodedPriv: string
+        kusuri: string
+        cert: string
         channel: string <default: dut-channel>
         contract: string <default: bkeca>
         transactionArguments: []string (remember to destructuring inside submitTransaction function)
@@ -20,17 +24,13 @@ const ccpPath = path.resolve(__dirname, 'connection', 'connection-udn.json');
 exports.invoke = async (args) => {
     try {
 
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'blockchain/wallet');
-        const wallet = new FileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        // Create an in memory based wallet for temporary identity create from database
+        const wallet = new InMemoryWallet();
 
-        // Check to see if we've already enrolled the user.
-        const userExists = await wallet.exists(args.user);
-        if (!userExists) {
-            console.log(`An identity for the user ${args.user} does not exist in the wallet`);
-            return;
-        }
+        const cert = args.cert;
+        const key = decodeAES(args.encodedPriv, args.kusuri);
+        
+        await wallet.import(args.user, X509WalletMixin.createIdentity('UdnMSP', cert, key));
 
         // Create a new gateway for connecting to our peer node.
         const gateway = new Gateway();
@@ -42,14 +42,12 @@ exports.invoke = async (args) => {
         // Get the contract from the network.
         const contract = network.getContract(args.contract);
 
-        await contract.submitTransaction(...args.transactionArguments);
+        const res = await contract.submitTransaction(...args.transactionArguments);
         console.log('Transaction has been submitted successfully');
-
+        // console.log(JSON.parse(res.toString('utf8')));
         // Disconnect from the gateway.
         await gateway.disconnect();
-
-        // return 
-
+        return res;
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         throw error;
