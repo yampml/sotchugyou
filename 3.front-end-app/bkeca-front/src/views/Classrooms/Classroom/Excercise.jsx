@@ -146,7 +146,7 @@ export default connect(
   const [isLoading, setIsLoading] = React.useState(false);
   const [classroomData, setClassroomData] = React.useState(null);
   const [exDialogOpen, setExDialogOpen] = React.useState(false);
-  const [exIndex, setExIndex] = React.useState(null);
+  const [exIndex, setExIndex] = React.useState(null); //exam_id
   const [exData, setExData] = React.useState(null);
   const [confirmDialog, setConfirmDialog] = React.useState(false);
   const [userChoices, setUserChoices] = React.useState(Array(100).fill(""));
@@ -160,39 +160,55 @@ export default connect(
   const [passwordDialog, setPasswordDialog] = React.useState(false);
   const [password, setPassword] = React.useState("");
 
+  const findObjectInArrayByAttr = (arr, key, value) => {
+    return arr.filter(item => item[key] === value)[0];
+  }
+
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   }
 
   const handlePasswordDialogClose = () => {
     setPasswordDialog(false);
+    clearExam();
   }
 
-  const handlePasswordDialogOpen = (examIndex) => {
+  const handlePasswordDialogOpen = (exam_id) => {
     setPasswordDialog(true);
-    setExIndex(examIndex);
-    setExData(classroomData.Exams[examIndex]);
+    setExIndex(exam_id);
+    setExData(findObjectInArrayByAttr(classroomData.Exams, "exam_id", exam_id));
   }
 
   const handleSendToBlockchain = async () => {
     setIsLoading(true);
+    console.log("SELECTING EXAM INDEX: ", exIndex)
+    console.log("CURRENT CLASSROOM DATA: ", classroomData)
     const responseCheckPwd = await axios.post(`/user/${props.currentUser.user_id}/checkUserPassword`, {
       pwd: password
     });
-
     console.log(responseCheckPwd.data.isEqual)
+    let selectedExamID = findObjectInArrayByAttr(classroomData.Exams, "exam_id", exIndex).exam_id
     if (responseCheckPwd.data.isEqual) {
-      const responseSendToBLC = await axios.post(`/user/${props.currentUser.user_id}/exam/${classroomData.Exams[exIndex].exam_id}/sendExamResultToBlockchain`, {
+      const responseSendToBLC = await axios.post(`/user/${props.currentUser.user_id}/exam/${selectedExamID}/sendExamResultToBlockchain`, {
         cert: props.currentUser.cert,
         priv_key: props.currentUser.priv_key,
         pwd: password
       });
 
-      console.log(responseSendToBLC);
-      // if(responseSendToBLC.data.)
-
       handlePasswordDialogClose();
-      clearExam();
+      
+      props.enqueueSnackbar({
+        message: "Data sent to Blockchain successfully!",
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: 'success',
+          autoHideDuration: 2000,
+          action: key => (
+            <CancelIcon onClick={() => props.closeSnackbar(key)}>X</CancelIcon>
+          ),
+        }
+      });
+      props.history.push(props.history.location.pathname);
     } else {
       props.enqueueSnackbar({
         message: "Something happened! Password is not truth!",
@@ -207,14 +223,6 @@ export default connect(
       });
 
     }
-    // console.log(exData);
-    // console.log(examResult);
-    // handleConfirmDialogClickClose();
-    // setExData(classroomData.Exams[exIndex])
-    // let newUserChoices = Array(classroomData.Exams[exIndex].Questions.length).fill(`question-${null}-choice-${null}`);
-    // setUserChoices(newUserChoices);
-    // setExamStartTime(Date.now())
-    // setExDialogOpen(true);
     setIsLoading(false);
   }
 
@@ -244,7 +252,7 @@ export default connect(
       })
     setClassroomData(classroomData);
     setIsLoading(false);
-    console.log(classroomData);
+    console.log("Exam All Info:", classroomData);
   };
 
   const loadExamResult = (user_id, exam_id) => {
@@ -271,8 +279,10 @@ export default connect(
     setUserChoices(newUserChoices);
   };
 
-  const handleConfirmDialogClickOpen = (examIndex) => {
-    if (new Date(classroomData.Exams[examIndex].end_time) < Date.now()) {
+  const handleConfirmDialogClickOpen = (exam_id) => {
+    let selectingExam = findObjectInArrayByAttr(classroomData.Exams, "exam_id", exam_id);
+
+    if (new Date(selectingExam.end_time) < Date.now()) {
       props.enqueueSnackbar({
         message: "Deadline passed! Unable to take this exam anymore!",
         options: {
@@ -285,15 +295,16 @@ export default connect(
         }
       });
     } else {
-      setExIndex(examIndex);
+      setExIndex(exam_id);
       setConfirmDialog(true);
     }
   };
 
   const handleConfirmDialogBtnOk = () => {
+    let selectingExam = findObjectInArrayByAttr(classroomData.Exams, "exam_id", exIndex);
     handleConfirmDialogClickClose();
-    setExData(classroomData.Exams[exIndex])
-    let newUserChoices = Array(classroomData.Exams[exIndex].Questions.length).fill(`question-${null}-choice-${null}`);
+    setExData(selectingExam)
+    let newUserChoices = Array(selectingExam.Questions.length).fill(`question-${null}-choice-${null}`);
     setUserChoices(newUserChoices);
     setExamStartTime(Date.now())
     setExDialogOpen(true);
@@ -423,7 +434,12 @@ export default connect(
 
 
   const isExamDone = (exam) => {
-    return props.currentUser.studentExams.filter(e => e.exam_id === exam.exam_id && e.status !== 'UNTAKED').length > 0;
+    return props.currentUser.studentExams.filter(e => e.exam_id === exam.exam_id && e.status === 'TAKED').length > 0;
+  }
+
+  const isSavedOnChain = (exam) => {
+    console.log(exam)
+    return props.currentUser.studentExams.filter(e => e.exam_id === exam.exam_id && e.status === 'ONCHAIN').length > 0;
   }
 
   const takenChip = (exam) => {
@@ -437,10 +453,12 @@ export default connect(
     } else return null;
   }
 
-  const onOpenResult = (examIndex) => {
+  const onOpenResult = (exam_id) => {
     setShowingExamRes(true);
-    setExData(classroomData.Exams[examIndex]);
-    loadExamResult(props.currentUser.user_id, classroomData.Exams[examIndex].exam_id);
+    const selectingExam = findObjectInArrayByAttr(classroomData.Exams, "exam_id", exam_id);
+    console.log(selectingExam)
+    setExData(selectingExam);
+    loadExamResult(props.currentUser.user_id, selectingExam.exam_id);
   }
 
   const onCloseResult = () => {
@@ -529,10 +547,11 @@ export default connect(
                 classroomData.Exams.slice(currentPage * perPage, currentPage * perPage + perPage > classroomData.Exams.length ? classroomData.Exams.length : currentPage * perPage + perPage).map((exam, index) => {
                   return (
                     <ExpansionPanel
+                      isSentToBlockchain={isSavedOnChain(exam)}
                       isDone={isExamDone(exam)}
-                      onOpenResult={() => onOpenResult(index)}
-                      onTakeExam={() => handleConfirmDialogClickOpen(index)}
-                      onSendToBlockchain={() => handlePasswordDialogOpen(index)}
+                      onOpenResult={() => onOpenResult(exam.exam_id)}
+                      onTakeExam={() => handleConfirmDialogClickOpen(exam.exam_id)}
+                      onSendToBlockchain={() => handlePasswordDialogOpen(exam.exam_id)}
                       examData={exam}
                       key={"exam-" + index}
                       examTakenChip={() => takenChip(exam)}

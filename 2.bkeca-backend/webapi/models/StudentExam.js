@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     'status': {
       type: DataTypes.ENUM({
-        values: ['UNTAKED', 'TAKING', 'TAKED']
+        values: ['UNTAKED', 'TAKING', 'TAKED', 'ONCHAIN']
       }),
       defaultValue: 'UNTAKED',
       allowNull: true,

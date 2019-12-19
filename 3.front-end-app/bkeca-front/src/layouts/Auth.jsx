@@ -183,7 +183,6 @@ export default connect(
               label="Full Name"
               name="username"
               autoComplete="username"
-              autoFocus
               value={username}
               onChange={event => setUsername(event.target.value)}
             /> : null
@@ -245,11 +244,6 @@ export default connect(
           </Button>
           {props.loading ? <Grid container justify="center"><CircularProgress /></Grid> : null}
           <Grid container>
-            <Grid item xs>
-              {isSignUp ? null : <Link href="#" variant="body2">
-                Forgot password?
-                </Link>}
-            </Grid>
             <Grid item>
               <Link href="#" variant="body2" onClick={() => switchAuthModeHandler()}>
                 {isSignUp ? "Switch to Sign In" : "Don't have an account? Sign Up!"}

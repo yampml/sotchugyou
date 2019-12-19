@@ -30,4 +30,7 @@ router.put(
 // POST /api/user/:id
 router.delete('/user/:userID', isAuth, userController.deleteUser);
 
+// GET /api/user/:id/examsOnChain
+router.post('/user/:userID/examsOnChain', userController.getStudentAllExamOnChain);
+
 module.exports = router;

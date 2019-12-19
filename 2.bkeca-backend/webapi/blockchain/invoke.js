@@ -47,7 +47,10 @@ exports.invoke = async (args) => {
         // console.log(JSON.parse(res.toString('utf8')));
         // Disconnect from the gateway.
         await gateway.disconnect();
-        return res;
+        return {
+            message: `Transaction has been evaluated, result is: ${res.toString()}`,
+            responseData: res.toString()
+        }
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         throw error;

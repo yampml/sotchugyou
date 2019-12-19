@@ -230,16 +230,16 @@ export default function Classroom(props) {
             </GridItem>
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <CardHeader title="Tin mới cmn" />
+                <CardHeader title="Nội dung lớp học" />
                 <CardContent>
-                  <Typography>Messi sut sml Ronaldo</Typography>
+                  <Typography>Nội dung lớp học nằm ở đường dẫn http://abc.xyz</Typography>
                 </CardContent>
                 <hr className={classes.greyHr}></hr>
                 <CardActions>
                   <TextField
                     id="standard-basic"
                     className={classes.textField}
-                    label="Comment something di dude"
+                    label="Comment something"
                     margin="normal"
                   />
                   <Button size="small" color="primary">

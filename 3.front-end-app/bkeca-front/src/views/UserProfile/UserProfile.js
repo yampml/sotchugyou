@@ -32,6 +32,9 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { decodeCertificateInfo } from 'decodePK.js';
+import { encodingAlgorithmMap, oidMap } from 'variables/oidTable.js';
+
+const mergedOidMap = { ...encodingAlgorithmMap, ...oidMap };
 
 const CssTextField = withStyles({
   root: {
@@ -166,7 +169,7 @@ export default connect(
               <ListItemIcon>
                 <CheckCircleTwoToneIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary={"OID: " + e.type} secondary={e.value} />
+              <ListItemText primary={`OID: ${e.type} | ${mergedOidMap[e.type]}`} secondary={e.value} />
             </ListItem>
           )
         })}
@@ -176,7 +179,7 @@ export default connect(
               <ListItemIcon>
                 <CheckCircleTwoToneIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary={"OID: " + e.type} secondary={e.value} />
+              <ListItemText primary={`OID: ${e.type} | ${mergedOidMap[e.type]}`} secondary={e.value} />
             </ListItem>
           )
         })}

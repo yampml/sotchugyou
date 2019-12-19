@@ -384,7 +384,8 @@ exports.sendExamResultToBlockchain = async (req, res, next) => {
     }
 
     await invoke(argsss);
-
+    // student_exam[0].status = 'ONCHAIN';
+    // await student_exam[0].save();
     res.status(201).json(
       {
         message: "OK! DONE",

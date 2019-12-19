@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator/check');
 const bcrypt = require('bcryptjs');
 const { User } = require('../models/modelsIndex');
 const jwt = require('jsonwebtoken');
+const { invoke } = require('./../blockchain/invoke.js');
 
 const checkUser = (req, currentUserID) => {
   const authHeader = req.get('Authorization');
@@ -58,8 +59,8 @@ exports.getUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if(checkUser(req, user.user_id)) res.status(200).json({ message: 'User fetched.', user: { ...user.dataValues } });
-      else res.status(500).json({ message: 'Forbidden !'})
+      if (checkUser(req, user.user_id)) res.status(200).json({ message: 'User fetched.', user: { ...user.dataValues } });
+      else res.status(500).json({ message: 'Forbidden !' })
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -201,3 +202,34 @@ exports.deleteUser = (req, res, next) => {
 //   filePath = path.join(__dirname, '..', filePath);
 //   fs.unlink(filePath, err => console.log(err));
 // };
+
+exports.getStudentAllExamOnChain = async (req, res, next) => {
+  try {
+    const userID = req.params.userID;
+    const user = await User.findByPk(userID);
+
+    const invokeArgs = {
+      user: user.email,
+      encodedPriv: req.body.priv_key,
+      kusuri: req.body.pwd,
+      cert: req.body.cert,
+      channel: 'dut-channel',
+      contract: 'bkeca',
+      transactionArguments: ["queryStudentTestInfoByEmail", user.email]
+    }
+    console.log(invokeArgs)
+    const invokedData = await invoke(invokeArgs);
+    let allExamData = JSON.parse(invokedData.responseData);
+    if(allExamData == null) {
+      const error = new Error('Student exam data not found');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ message: 'Student all exams data fetched', allExamData })
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next();
+  }
+}

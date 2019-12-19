@@ -24,15 +24,53 @@ import {
   dailySalesChart,
   completedTasksChart
 } from "variables/charts.js";
-
+import * as actions from "store/actions/actionIndexes";
+import { user_instance as axios } from '../../apiCaller';
+import { connect } from "react-redux";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles(styles);
 
-export default function Dashboard() {
+
+const mapStateToProps = state => {
+  return {
+    currentUser: state.auth.currentUser,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    enqueueSnackbar: (notification) => dispatch(actions.enqueueSnackbar(notification)),
+    closeSnackbar: (key) => dispatch(actions.closeSnackbar(key))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(function Dashboard(props) {
+
+
+
+
+  const getStudentAllExamOnChain = async () => {
+    const studentOnChainData = await axios.post(`/user/${props.currentUser.user_id}/examsOnChain`, {
+      cert: props.currentUser.cert,
+      priv_key: props.currentUser.priv_key,
+      pwd: "foobarpassword"
+    });
+
+    console.log(studentOnChainData);
+  }
+
+
+  
+
   const classes = useStyles();
   return (
     <div>
+      {/* <Button onClick={getStudentAllExamOnChain}>CCCCBtn</Button> */}
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <CustomTabs
@@ -111,12 +149,12 @@ export default function Dashboard() {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
+              <h4 className={classes.cardTitle}>Recently Result</h4>
               <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
                 </span>{" "}
-                increase in today sales.
+                increase in today.
               </p>
             </CardBody>
             <CardFooter chart>
@@ -130,3 +168,4 @@ export default function Dashboard() {
     </div>
   );
 }
+)

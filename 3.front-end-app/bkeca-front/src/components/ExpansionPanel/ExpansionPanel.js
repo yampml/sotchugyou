@@ -128,16 +128,28 @@ export default function DetailedExpansionPanel(props) {
                     <ArrowForwardIcon className={classes.extendedIcon} />
                     View Result
                   </Fab>
-                  <Fab
-                    color="secondary"
-                    variant="extended"
-                    aria-label="add"
-                    // className={classes.fab}
-                    onClick={props.onSendToBlockchain}
-                  >
-                    <ArrowForwardIcon className={classes.extendedIcon} />
-                    SEND TO BLOCKCHAIN
-                  </Fab>
+                  |
+                  { props.isSentToBlockchain === false ? 
+                    <Fab
+                      color="secondary"
+                      variant="extended"
+                      aria-label="add"
+                      // className={classes.fab}
+                      onClick={props.onSendToBlockchain}
+                    >
+                      <ArrowForwardIcon className={classes.extendedIcon} />
+                      SEND TO BLOCKCHAIN
+                    </Fab> 
+                    :
+                    <Fab
+                      color="Primary"
+                      variant="extended"
+                      aria-label="add"
+                      // className={classes.fab}
+                    >
+                      SAVED ON CHAIN
+                    </Fab>
+                  }
                 </React.Fragment>
 
                 : null
